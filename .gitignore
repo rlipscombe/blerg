@@ -1,0 +1,6 @@
+deps/
+apps/*/ebin/
+
+erl_crash.dump
+rebar
+log/

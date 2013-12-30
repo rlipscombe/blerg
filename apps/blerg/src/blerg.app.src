@@ -1,0 +1,13 @@
+{application, blerg,
+    [
+        {description, ""},
+        {vsn, "1"},
+        {registered, []},
+        {applications, [
+                kernel, stdlib,
+                lager,
+                cowboy
+                ]},
+        {mod, { blerg_app, []}},
+        {env, []}
+        ]}.
