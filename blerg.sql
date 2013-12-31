@@ -17,9 +17,10 @@ CREATE TABLE posts (
   id serial primary key,
   title varchar(250),
   author_id integer references users(id),
+  created_at timestamp,
   body text
 );
 
 INSERT INTO users(id, name) VALUES(1, 'roger');
-INSERT INTO posts(title, author_id, body) VALUES('Hello', 1, 'World');
+INSERT INTO posts(title, author_id, created_at, body) VALUES('Hello', 1, current_timestamp, 'World');
 

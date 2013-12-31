@@ -7,11 +7,24 @@ init(_Type, Req, _Opts) ->
 
 handle(Req, State) ->
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    Posts = posts:index(),
-    {ok, Body} = index_dtl:render([{site, [{name, "Foo"}]}, {posts, Posts}]),
+    Posts = [transform_post(P) || P <- posts:index()],
+    {ok, Body} = index_dtl:render([{site, [{name, "Roger's Blog"}]}, {posts, Posts}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.
 
+transform_post(P) ->
+    transform_post(P, []).
+
+transform_post([], Acc) ->
+    Acc;
+transform_post([H|T], Acc) ->
+    transform_post(T, [transform_prop(H)|Acc]).
+
+transform_prop({created_at, Timestamp}) ->
+    {{Ye,Mo,Da},{Ho,Mi,_Se}} = Timestamp,
+    {created_at, io_lib:format("~4p-~2p-~2p ~2p:~2p", [Ye, Mo, Da, Ho, Mi])};
+transform_prop(X) ->
+    X.

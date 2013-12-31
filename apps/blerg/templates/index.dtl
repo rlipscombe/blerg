@@ -17,14 +17,16 @@
         </div>
       </div>
     </div>
-    <h1>Home</h1>
+    <div class="container">
+      {% for p in posts %}
+      <article>
+      <h1><a href="#">{{ p.title }}</a></h1>
+      <div class="details"><span class="created_at">{{ p.created_at }}</span></div>
+      <p>{{ p.body }}</p>
+      </article>
+      {% endfor %}
 
-    {% for p in posts %}
-    <article>
-    <h1>{{ p.title }}</h1>
-    <p>{{ p.body }}</p>
-    </article>
-    {% endfor %}
+    </div>
 
     <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>

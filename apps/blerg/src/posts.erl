@@ -2,10 +2,10 @@
 -export([index/0]).
 
 index() -> 
-    {ok, _Cols, Rows} = blerg_db:equery("SELECT p.title, u.name AS author, p.body
+    {ok, _Cols, Rows} = blerg_db:equery("SELECT p.title, u.name AS author, p.created_at, p.body
                                          FROM posts p
                                        JOIN users u ON p.author_id = u.id"),
     % We want a proplist, rather than simple columns, so...
     % TODO: Consider iterating over the returned columns and doing it that way...
-    [[{title, Title}, {author, Author}, {body, Body}] || {Title, Author, Body} <- Rows].
+    [[{title, Title}, {author, Author}, {created_at, CreatedAt}, {body, Body}] || {Title, Author, CreatedAt, Body} <- Rows].
 
