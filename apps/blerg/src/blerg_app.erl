@@ -33,6 +33,11 @@ start_poolboy() ->
 
 error_hook(Code, Headers, <<>>, Req)
         when is_integer(Code), Code >= 400 ->
+
+    % Note that I'm ignoring the fact that this returns Req2.
+    {Path, _} = cowboy_req:path(Req),
+    lager:warning("HTTP Error ~p when ~p", [Code, Path]),
+
     Body = ["HTTP Error ", integer_to_list(Code), $\n],
     Headers2 = lists:keyreplace(<<"content-length">>, 1, Headers,
                                 {<<"content-length">>, integer_to_list(iolist_size(Body))}),
