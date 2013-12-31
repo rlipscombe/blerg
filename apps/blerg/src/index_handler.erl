@@ -7,7 +7,8 @@ init(_Type, Req, _Opts) ->
 
 handle(Req, State) ->
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = index_dtl:render(),
+    Posts = posts:index(),
+    {ok, Body} = index_dtl:render([{posts, Posts}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State}.
 
