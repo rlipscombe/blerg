@@ -3,6 +3,14 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    ok = start_cowboy(),
+    ok = start_poolboy(),
+    blerg_sup:start_link().
+
+stop(_State) ->
+    ok.
+
+start_cowboy() ->
     Routes = [
             {"/", index_handler, []}],
     Host = {'_', Routes},
@@ -11,9 +19,10 @@ start(_StartType, _StartArgs) ->
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
                                  {onresponse, fun error_hook/4}]),
-    blerg_sup:start_link().
+    ok.
 
-stop(_State) ->
+start_poolboy() ->
+    {ok, _} = blerg_db_sup:start_link(),
     ok.
 
 error_hook(Code, Headers, <<>>, Req)
