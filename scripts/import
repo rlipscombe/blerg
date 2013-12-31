@@ -1,0 +1,57 @@
+#!/usr/bin/env escript
+%%! -pa ../deps/epgsql/ebin ../deps/iso8601/ebin
+
+main([Dir]) ->
+    {ok, C} = pgsql:connect("localhost", "blerg", "", [{database, "blerg"}]),
+    {ok, Files} = file:list_dir(Dir),
+    import_files([filename:join(Dir, X) || X <- Files], C),
+    pgsql:close(C).
+
+import_files([], C) ->
+    ok;
+import_files([H|T], C) ->
+    import_file(H, C),
+    import_files(T, C).
+
+import_file(F, C) ->
+    {ok, Bytes} = file:read_file(F),
+    Content = binary:split(Bytes, <<"\n">>, [global]),
+    Post = parse(Content),
+    Date = proplists:get_value(date, Post),
+    io:format("~p~n", [Date]),
+    CreatedAt = case Date of
+        undefined ->
+            iso8601:parse("2013-12-31T20:22:00Z");
+        _ ->
+            iso8601:parse(Date)
+    end,
+    pgsql:equery(C, "INSERT INTO posts(title, author_id, created_at, body) VALUES($1, $2, $3, $4)",
+                 [proplists:get_value(title, Post), 1, CreatedAt, proplists:get_value(body, Post)]).
+
+parse(Lines) ->
+    parse(init, Lines, []).
+
+parse(init, [<<"---">>|Lines], Acc) ->
+    parse(topmatter, Lines, Acc);
+parse(init, Lines, Acc) ->
+    parse(body, Lines, Acc);
+parse(topmatter, [<<"---">>|Lines], Acc) ->
+    parse(break, Lines, Acc);
+parse(topmatter, [H|Lines], Acc) ->
+    [Tag|[Value]] = binary:split(H, <<":">>, []),
+    TagAtom = list_to_existing_atom(binary_to_list(Tag)),
+    ValueTrim = string:strip(binary_to_list(Value)),
+    Acc2 = [{TagAtom, ValueTrim}|Acc],
+    parse(topmatter, Lines, Acc2);
+parse(break, [<<>>|Lines], Acc) ->
+    parse(body, Lines, Acc);
+parse(break, [Lines], Acc) ->
+    parse(body, Lines, Acc);
+parse(body, Lines, Acc) ->
+    [{body, Lines}|Acc].
+
+existing_atoms() ->
+    [layout, title, date, tags, alias].
+%% -*- erlang -*-
+%% vim: ft=erlang
+
