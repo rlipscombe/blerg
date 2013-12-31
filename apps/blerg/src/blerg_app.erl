@@ -12,7 +12,12 @@ stop(_State) ->
 
 start_cowboy() ->
     Routes = [
-            {"/", index_handler, []}],
+            {"/", index_handler, []},
+
+            % static files
+            {"/css/[...]", cowboy_static, {priv_dir, blerg, "css"}},
+            {"/js/[...]", cowboy_static, {priv_dir, blerg, "js"}}
+            ],
     Host = {'_', Routes},
     Dispatch = cowboy_router:compile([Host]),
     {ok, _} = cowboy:start_http(http, 100,

@@ -1,16 +1,32 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Home</title>
-    </head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <body>
-        <h1>Home</h1>
+    <title>{{ site.name }}</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  </head>
 
-        {% for p in posts %}
-        <article>
-        <h1>{{ p.title }}</h1>
-        <p>{{ p.body }}</p>
-        </article>
-        {% endfor %}
-    </body>
+  <body>
+    <div class="navbar navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">{{ site.name }}</a>
+        </div>
+      </div>
+    </div>
+    <h1>Home</h1>
+
+    {% for p in posts %}
+    <article>
+    <h1>{{ p.title }}</h1>
+    <p>{{ p.body }}</p>
+    </article>
+    {% endfor %}
+
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
 </html>
