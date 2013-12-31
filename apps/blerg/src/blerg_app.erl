@@ -15,6 +15,7 @@ start_cowboy() ->
             {"/", index_handler, []},
 
             % static files
+            {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
             {"/css/[...]", cowboy_static, {priv_dir, blerg, "css"}},
             {"/js/[...]", cowboy_static, {priv_dir, blerg, "js"}}
             ],
