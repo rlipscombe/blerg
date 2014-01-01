@@ -4,7 +4,8 @@
 main([Dir]) ->
     {ok, C} = pgsql:connect("localhost", "blerg", "", [{database, "blerg"}]),
     {ok, Files} = file:list_dir(Dir),
-    import_files([filename:join(Dir, X) || X <- Files], C),
+    Pred = fun([H|_]) -> H =/= $. end,
+    import_files([filename:join(Dir, X) || X <- lists:filter(Pred, Files)], C),
     pgsql:close(C).
 
 import_files([], C) ->
@@ -14,9 +15,12 @@ import_files([H|T], C) ->
     import_files(T, C).
 
 import_file(F, C) ->
+    io:format("~s~n", [F]),
     {ok, Bytes} = file:read_file(F),
     Content = binary:split(Bytes, <<"\n">>, [global]),
     Post = parse(Content),
+    Title = proplists:get_value(title, Post),
+    AuthorId = 1,
     Date = proplists:get_value(date, Post),
     CreatedAt = case Date of
         undefined ->
@@ -24,8 +28,20 @@ import_file(F, C) ->
         _ ->
             iso8601:parse(Date)
     end,
-    pgsql:equery(C, "INSERT INTO posts(title, author_id, created_at, body) VALUES($1, $2, $3, $4)",
-                 [proplists:get_value(title, Post), 1, CreatedAt, proplists:get_value(body, Post)]).
+    Url = create_url(CreatedAt, Title),
+    Body = proplists:get_value(body, Post),
+    pgsql:equery(C, "INSERT INTO posts(title, url, author_id, created_at, body) VALUES($1, $2, $3, $4, $5)",
+                 [Title, Url, AuthorId, CreatedAt, Body]).
+
+create_url({{Ye,Mo,Da},{_,_,_}}, Title) ->
+    Slug = create_slug(Title),
+    io_lib:format("~4..0B/~2..0B/~2..0B/~s", [Ye, Mo, Da, Slug]).
+
+create_slug(Title) ->
+    string:to_lower(
+        re:replace(
+            re:replace(Title, "[^A-Za-z0-9]", "-", [global]),
+            "-{2,}", "-", [global, {return, list}])).
 
 parse(Lines) ->
     parse(init, Lines, []).

@@ -21,7 +21,7 @@
     <div class="container">
       {% for p in posts %}
       <article>
-      <h1><a href="#">{{ p.title }}</a></h1>
+      <h1><a href="{{ p.url }}">{{ p.title }}</a></h1>
       <div class="details">
           <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
       </div>
