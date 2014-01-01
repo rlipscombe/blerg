@@ -26,5 +26,7 @@ transform_post([H|T], Acc) ->
 transform_prop({created_at, Timestamp}) ->
     {{Ye,Mo,Da},{Ho,Mi,_Se}} = Timestamp,
     {created_at, io_lib:format("~4..0B-~2..0B-~2..0B ~2..0B:~2..0B", [Ye, Mo, Da, Ho, Mi])};
+transform_prop({body, Body}) ->
+    {body, markdown:conv(binary_to_list(Body))};
 transform_prop(X) ->
     X.
