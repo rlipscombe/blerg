@@ -22,7 +22,9 @@
       {% for p in posts %}
       <article>
       <h1><a href="#">{{ p.title }}</a></h1>
-      <div class="details"><span class="created_at">{{ p.created_at }}</span></div>
+      <div class="details">
+          <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
+      </div>
       <p>{{ p.body }}</p>
       </article>
       {% endfor %}
