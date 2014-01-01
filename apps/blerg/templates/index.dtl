@@ -26,6 +26,9 @@
           <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
       </div>
       <p>{{ p.body }}</p>
+      {% if p.read_more %}
+      <a href="{{ p.url }}">&raquo; read more</a>
+      {% endif %}
       </article>
       {% endfor %}
 
