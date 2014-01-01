@@ -18,7 +18,6 @@ import_file(F, C) ->
     Content = binary:split(Bytes, <<"\n">>, [global]),
     Post = parse(Content),
     Date = proplists:get_value(date, Post),
-    io:format("~p~n", [Date]),
     CreatedAt = case Date of
         undefined ->
             iso8601:parse("2013-12-31T20:22:00Z");
@@ -39,16 +38,23 @@ parse(topmatter, [<<"---">>|Lines], Acc) ->
     parse(break, Lines, Acc);
 parse(topmatter, [H|Lines], Acc) ->
     [Tag|[Value]] = binary:split(H, <<":">>, []),
-    TagAtom = list_to_existing_atom(binary_to_list(Tag)),
-    ValueTrim = string:strip(binary_to_list(Value)),
-    Acc2 = [{TagAtom, ValueTrim}|Acc],
+    Acc2 = [parse_topmatter_tag(Tag, Value)|Acc],
     parse(topmatter, Lines, Acc2);
 parse(break, [<<>>|Lines], Acc) ->
     parse(body, Lines, Acc);
 parse(break, [Lines], Acc) ->
     parse(body, Lines, Acc);
 parse(body, Lines, Acc) ->
-    [{body, Lines}|Acc].
+    [{body, string:join([binary_to_list(X) || X <- Lines], "\n")}|Acc].
+
+parse_topmatter_tag(<<"title">> = Tag, Value) ->
+    TagAtom = list_to_existing_atom(binary_to_list(Tag)),
+    ValueTrim = string:strip(string:strip(binary_to_list(Value)), both, $"),
+    {TagAtom, ValueTrim};
+parse_topmatter_tag(Tag, Value) ->
+    TagAtom = list_to_existing_atom(binary_to_list(Tag)),
+    ValueTrim = string:strip(binary_to_list(Value)),
+    {TagAtom, ValueTrim}.
 
 existing_atoms() ->
     [layout, title, date, tags, alias].
