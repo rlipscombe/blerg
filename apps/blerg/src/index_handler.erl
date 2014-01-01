@@ -2,6 +2,8 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
+-define(TEASER_LENGTH, 360).
+
 init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
@@ -28,9 +30,18 @@ transform_prop({created_at, Timestamp}) ->
      {created_at_iso, datetime_to_iso(Timestamp)},
      {created_at_ago, timeago:in_words(Timestamp)}];
 transform_prop({body, Body}) ->
-    {body, markdown:conv(binary_to_list(Body))};
+    create_teaser(Body);
 transform_prop(X) ->
     X.
+
+create_teaser(Body) when is_binary(Body) ->
+    create_teaser(binary_to_list(Body));
+create_teaser(Body) when length(Body) > ?TEASER_LENGTH ->
+    [{body, markdown:conv(string:substr(Body, 1, ?TEASER_LENGTH) ++ "...")},
+     {read_more, true}];
+create_teaser(Body) ->
+    [{body, markdown:conv(Body)},
+     {read_more, false}].
 
 datetime_to_iso({{Ye,Mo,Da},{Ho,Mi,_Se}}) ->
     io_lib:format("~4..0B-~2..0B-~2..0B ~2..0B:~2..0B", [Ye, Mo, Da, Ho, Mi]).
