@@ -15,7 +15,6 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
   id serial primary key,
-  url varchar(80),
   title varchar(250),
   author_id integer references users(id),
   created_at timestamp,

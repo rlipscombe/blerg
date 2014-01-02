@@ -28,10 +28,9 @@ import_file(F, C) ->
         _ ->
             iso8601:parse(Date)
     end,
-    Url = create_url(CreatedAt, Title),
     Body = proplists:get_value(body, Post),
-    pgsql:equery(C, "INSERT INTO posts(title, url, author_id, created_at, body) VALUES($1, $2, $3, $4, $5)",
-                 [Title, Url, AuthorId, CreatedAt, Body]).
+    pgsql:equery(C, "INSERT INTO posts(title, author_id, created_at, body) VALUES($1, $2, $3, $4)",
+                 [Title, AuthorId, CreatedAt, Body]).
 
 create_url({{Ye,Mo,Da},{_,_,_}}, Title) ->
     Slug = create_slug(Title),

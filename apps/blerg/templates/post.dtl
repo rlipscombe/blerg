@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>{{ site.name }}</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/yeti/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/yeti-custom.css" />
+    </head>
+
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">{{ site.name }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <article>
+            <h1>{{ post.title }}</h1>
+            <div class="details">
+                <span class="created_at" title="{{ post.created_at_iso }}">{{ post.created_at_ago }}</span>
+            </div>
+            <p>{{ post.body }}</p>
+            </article>
+        </div>
+
+        <script src="/js/jquery-1.10.2.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+    </body>
+</html>
