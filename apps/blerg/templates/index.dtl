@@ -1,24 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{% extends "_master.dtl" %}
 
-    <title>{{ site.name }}</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/yeti/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/yeti-custom.css" />
-  </head>
-
-  <body>
-    <div class="navbar navbar-inverse" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">{{ site.name }}</a>
-        </div>
-      </div>
-    </div>
-    <div class="container">
+{% block content %}
       {% for p in posts %}
       <article>
       <h1><a href="/post/{{ p.id }}">{{ p.title }}</a></h1>
@@ -31,10 +13,5 @@
       {% endif %}
       </article>
       {% endfor %}
+{% endblock %}
 
-    </div>
-
-    <script src="/js/jquery-1.10.2.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-  </body>
-</html>

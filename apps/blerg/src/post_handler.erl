@@ -6,10 +6,12 @@ init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
+    Site = [{name, "Roger's Blog"}],
     {Id, Req2} = cowboy_req:binding(id, Req),
     Headers = [{<<"content-type">>, <<"text/html">>}],
     Post = transform:post(posts:by_id(Id)),
-    {ok, Body} = post_dtl:render([{site, [{name, "Roger's Blog"}]}, {post, Post}]),
+    Title = proplists:get_value(title, Post),
+    {ok, Body} = post_dtl:render([{title, Title}, {site, Site}, {post, Post}]),
     {ok, Req3} = cowboy_req:reply(200, Headers, Body, Req2),
     {ok, Req3, State}.
 
