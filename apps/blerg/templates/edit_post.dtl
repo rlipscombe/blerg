@@ -3,20 +3,53 @@
 {% block styles %}
 <style type="text/css">
     #go-edit, #go-preview { cursor: pointer; }
+    #tab-edit, #tab-preview { display: block; margin-left: 0 }
+    #editor { position: relative; border: 1px solid #008cba; }
+    @media (min-width: 1200px) {
+        #editor { width: 1170px; height: 600px; margin-left: 0; margin-bottom: 0.8em; }
+    }
+    @media (min-width: 979px) and (max-width: 1200px) {
+        #editor { width: 960px; height: 500px; margin-bottom: 0.8em; }
+    }
+    @media (max-width: 979px) {
+        #editor { width: 744px; height: 380px; margin-bottom: 0.8em; }
+    }
+    form {
+        margin-top: 0.8em;
+    }
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        background-color: #008cba;
+        color: #fff;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<ul class="nav nav-pills">
+<ul class="nav nav-tabs">
     <li class="active" id="go-edit"><a>Edit</a></li>
     <li id="go-preview"><a>Preview</a><li>
 </ul>
 
 <div id="tabs">
     <div id="tab-edit">
-        <div id="editor">
-            Editor goes here.
-        </div>
+        <form role="form" class="form-horizontal" method="post">
+            <div class="form-group">
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" id="title" name="title" placeholder="Title"/>
+                </div>
+            </div>
+            <div id="editor">Editor goes here.</div>
+
+            <input type="hidden" name="markdown"/>
+
+            <div class="form-group">
+                <div class="col-sm-7">
+                    <button type="submit" id="save" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div id="tab-preview">
@@ -27,31 +60,5 @@
 
 {% block script %}
 <script src="/js/ace/ace.js"></script>
-<script>
-    function goEdit() {
-        $('#go-edit').addClass('active');
-        $('#tab-edit').show();
-
-        $('#go-preview').removeClass('active');
-        $('#tab-preview').hide();
-    }
-
-    function goPreview() {
-        $('#go-preview').addClass('active');
-        $('#tab-preview').show();
-
-        $('#go-edit').removeClass('active');
-        $('#tab-edit').hide();
-    }
-
-    $(document).ready(function() {
-        $('#go-preview').click(goPreview);
-        $('#go-edit').click(goEdit);
-
-        goEdit();
-
-        editor.setTheme('ace/theme/textmate');
-        editor.getSession().setMode('ace/mode/markdown');
-        });
-    </script>
-    {% endblock %}
+<script src="/js/edit.js"></script>
+{% endblock %}
