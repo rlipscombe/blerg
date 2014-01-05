@@ -8,22 +8,20 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/yeti/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/yeti-custom.css" />
+
+    {% block styles %}{% endblock %}
   </head>
 
   <body>
-    <div class="navbar navbar-inverse" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">{{ title }}</a>
-        </div>
-      </div>
-    </div>
+    {% include "_navbar.dtl" %}
     <div class="container">
       {% block content %}{% endblock %}
     </div>
 
     <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+
+    {% block script %}{% endblock %}
   </body>
 </html>
 

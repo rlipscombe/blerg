@@ -15,6 +15,7 @@ start_cowboy() ->
             {"/", index_handler, []},
 
             % posts
+            {"/post/create", create_post_handler, []},
             {"/post/:id", post_handler, []},
 
             % static files

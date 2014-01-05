@@ -1,0 +1,57 @@
+{% extends "_master.dtl" %}
+
+{% block styles %}
+<style type="text/css">
+    #go-edit, #go-preview { cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-pills">
+    <li class="active" id="go-edit"><a>Edit</a></li>
+    <li id="go-preview"><a>Preview</a><li>
+</ul>
+
+<div id="tabs">
+    <div id="tab-edit">
+        <div id="editor">
+            Editor goes here.
+        </div>
+    </div>
+
+    <div id="tab-preview">
+        Preview goes here.
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/js/ace/ace.js"></script>
+<script>
+    function goEdit() {
+        $('#go-edit').addClass('active');
+        $('#tab-edit').show();
+
+        $('#go-preview').removeClass('active');
+        $('#tab-preview').hide();
+    }
+
+    function goPreview() {
+        $('#go-preview').addClass('active');
+        $('#tab-preview').show();
+
+        $('#go-edit').removeClass('active');
+        $('#tab-edit').hide();
+    }
+
+    $(document).ready(function() {
+        $('#go-preview').click(goPreview);
+        $('#go-edit').click(goEdit);
+
+        goEdit();
+
+        editor.setTheme('ace/theme/textmate');
+        editor.getSession().setMode('ace/mode/markdown');
+        });
+    </script>
+    {% endblock %}
