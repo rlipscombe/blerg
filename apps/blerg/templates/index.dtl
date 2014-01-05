@@ -1,5 +1,14 @@
 {% extends "_master.dtl" %}
 
+{% block styles %}
+<style>
+    footer .container {
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
       {% for p in posts %}
       <article>
@@ -15,3 +24,19 @@
       {% endfor %}
 {% endblock %}
 
+{% block footer %}
+<footer class="navbar navbar-inverse" role="banner">
+<div class="container">
+    <div class="col-md-8">
+        <img src="/img/roger-bw-190px.png" style="float:left; margin-right: 0.8em;">
+        <p>My name is <a href="http://rogerlipscombe.me">Roger Lipscombe</a>.
+        </p>
+        <p>I'm a software developer at <a href="http://electricimp.com">electric imp</a>, 
+        programming in <b>node.js</b>, <b>Erlang</b> and <b>C++</b>.
+        </p>
+        <p>I mostly blog about programming and other technology and gadget stuff.
+        </p>
+    </div>
+</div>
+</footer>
+{% endblock %}

@@ -21,7 +21,8 @@ start_cowboy() ->
             % static files
             {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
             {"/css/[...]", cowboy_static, {priv_dir, blerg, "css"}},
-            {"/js/[...]", cowboy_static, {priv_dir, blerg, "js"}}
+            {"/js/[...]", cowboy_static, {priv_dir, blerg, "js"}},
+            {"/img/[...]", cowboy_static, {priv_dir, blerg, "img"}}
             ],
     Host = {'_', Routes},
     Dispatch = cowboy_router:compile([Host]),
@@ -47,6 +48,8 @@ error_hook(Code, Headers, <<>>, Req)
                                 {<<"content-length">>, integer_to_list(iolist_size(Body))}),
     {ok, Req2} = cowboy_req:reply(Code, Headers2, Body, Req),
     Req2;
-error_hook(_Code, _Headers, _Body, Req) ->
+error_hook(Code, _Headers, _Body, Req) ->
+    {Path, _} = cowboy_req:path(Req),
+    lager:info("~p when ~p", [Code, Path]),
     Req.
 

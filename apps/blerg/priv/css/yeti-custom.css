@@ -9,3 +9,15 @@ article h2 {
 article h3 {
   font-size: 1.4em;
 }
+
+footer.navbar {
+    margin-top: 0.8em;
+    margin-bottom: 0;
+
+    color: #fff;
+}
+
+footer.navbar a {
+    color: #bbddff;
+}
+
