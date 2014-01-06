@@ -11,6 +11,3 @@ compile: get-deps
 dev: compile
 	PATH=.:${PATH} erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -s ssync -config dev.config
 
-prod: compile
-	erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -config prod.config
-
