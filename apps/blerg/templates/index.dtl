@@ -2,41 +2,48 @@
 
 {% block styles %}
 <style>
-    footer .container {
-        margin-top: 0.8em;
-        margin-bottom: 0.8em;
-    }
+  .about-me {
+    border-left-style: solid;
+    border-left-color: #008cba;
+    border-left-width: 1px;
+  }
+  .about-me ul {
+    padding-left: 0;
+  }
+  .about-me li {
+    list-style-type: none;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-      {% for p in posts %}
-      <article>
-      <h1><a href="/post/{{ p.id }}">{{ p.title }}</a></h1>
-      <div class="details">
-          <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
-      </div>
-      <p>{{ p.teaser }}</p>
-      {% if p.read_more %}
-      <a href="/post/{{ p.id }}">&raquo; read more</a>
-      {% endif %}
-      </article>
-      {% endfor %}
+<div class="col-md-9">
+  {% for p in posts %}
+  <article>
+  <h1><a href="/post/{{ p.id }}">{{ p.title }}</a></h1>
+  <div class="details">
+    <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
+  </div>
+  <p>{{ p.teaser }}</p>
+  {% if p.read_more %}
+  <a href="/post/{{ p.id }}">&raquo; read more</a>
+  {% endif %}
+  </article>
+  {% endfor %}
+</div>
+<div class="col-md-3 about-me">
+  <img src="/img/roger-bw-190px.png">
+  <p>My name is <a href="http://rogerlipscombe.me">Roger Lipscombe</a>.
+  </p>
+  <p>I'm a software developer at <a href="http://electricimp.com">electric imp</a>, 
+  programming in <b>node.js</b>, <b>Erlang</b> and <b>C++</b>.
+  </p>
+  <p>I mostly blog about programming and other technology and gadget stuff.
+  </p>
+
+  <ul>
+    <li><a href="https://twitter.com/rogerlipscombe">@rogerlipscombe</a></li>
+  </ul>
+</div>
 {% endblock %}
 
-{% block footer %}
-<footer class="navbar navbar-inverse" role="banner">
-<div class="container">
-    <div class="col-md-8">
-        <img src="/img/roger-bw-190px.png" style="float:left; margin-right: 0.8em;">
-        <p>My name is <a href="http://rogerlipscombe.me">Roger Lipscombe</a>.
-        </p>
-        <p>I'm a software developer at <a href="http://electricimp.com">electric imp</a>, 
-        programming in <b>node.js</b>, <b>Erlang</b> and <b>C++</b>.
-        </p>
-        <p>I mostly blog about programming and other technology and gadget stuff.
-        </p>
-    </div>
-</div>
-</footer>
-{% endblock %}
