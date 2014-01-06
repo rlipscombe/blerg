@@ -39,7 +39,7 @@ start_poolboy() ->
 error_hook(404, _Headers, <<>>, Req) ->
     {Path, _} = cowboy_req:path(Req),
     case aliases:search(Path) of
-        {ok, Url} -> redirect(Url, Req);
+        {ok, Url} -> redirect(Path, Url, Req);
         _ -> not_found(Path, Req)
     end;
 error_hook(Code, Headers, <<>>, Req)
@@ -59,15 +59,16 @@ error_hook(Code, _Headers, _Body, Req) ->
     lager:info("~p when ~p", [Code, Path]),
     Req.
 
-redirect(Url, Req) when is_list(Url) ->
-    redirect(list_to_binary(Url), Req);
-redirect(Url, Req) when is_binary(Url) ->
+redirect(Path, Url, Req) when is_list(Url) ->
+    redirect(Path, list_to_binary(Url), Req);
+redirect(Path, Url, Req) when is_binary(Url) ->
+    lager:info("Redirecting ~p to ~p", [Path, Url]),
     Headers = [{<<"location">>, Url}],
     {ok, Req2} = cowboy_req:reply(302, Headers, <<>>, Req),
     Req2.
 
 not_found(Path, Req) ->
-    Title = "Not Found",
+    lager:warning("Not found: ~p", [Path]),
     Site = [{name, "Roger's Blog"}],
     Headers = [{<<"content-type">>, <<"text/html">>}],
     {ok, Body} = not_found_dtl:render([{site, Site}, {path, Path}]),
