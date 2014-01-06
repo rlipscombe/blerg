@@ -5,8 +5,7 @@ index() ->
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, u.name AS author, p.created_at, p.body
                                          FROM posts p
                                          JOIN users u ON p.author_id = u.id
-                                         ORDER BY p.created_at DESC
-                                      LIMIT 10"),
+                                         ORDER BY p.created_at DESC"),
     [convert_to_proplist(Cols, R) || R <- Rows].
 
 convert_to_proplist(Cols, Row) when is_tuple(Row) ->
