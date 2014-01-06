@@ -13,6 +13,8 @@ CREATE TABLE users (
   name varchar(80)
 );
 
+INSERT INTO users(id, name) VALUES(1, 'roger');
+
 CREATE TABLE posts (
   id serial primary key,
   title varchar(250),
@@ -21,5 +23,9 @@ CREATE TABLE posts (
   body text
 );
 
-INSERT INTO users(id, name) VALUES(1, 'roger');
+CREATE TABLE aliases (
+    id serial primary key,
+    alias varchar(250),
+    post_id integer references posts(id)
+);
 

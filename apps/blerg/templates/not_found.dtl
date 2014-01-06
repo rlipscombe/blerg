@@ -1,0 +1,18 @@
+{% extends "_master.dtl" %}
+
+{% block styles %}
+<style>
+    footer .container {
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Not Found</h1>
+
+<p>The path <code>{{ path }}</code> could not be found. Try the <a href="/">home page</a>?
+</p>
+{% endblock %}
+
