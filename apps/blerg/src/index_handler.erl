@@ -7,7 +7,8 @@ init(_Type, Req, _Opts) ->
 
 handle(Req, State) ->
     Title = "Roger's Blog",
-    Site = [{name, "Roger's Blog"}],
+    {ok, Rev} = application:get_key(blerg, vsn),
+    Site = [{name, "Roger's Blog"}, {rev, Rev}],
     Headers = [{<<"content-type">>, <<"text/html">>}],
     Posts = [transform:post(P) || P <- posts:index()],
     {ok, Body} = index_dtl:render([{title, Title}, {site, Site}, {posts, Posts}]),

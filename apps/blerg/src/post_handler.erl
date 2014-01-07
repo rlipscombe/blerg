@@ -6,7 +6,8 @@ init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    Site = [{name, "Roger's Blog"}],
+    {ok, Rev} = application:get_key(blerg, vsn),
+    Site = [{name, "Roger's Blog"}, {rev, Rev}],
     {Id, Req2} = cowboy_req:binding(id, Req),
     reply(posts:by_id(Id), Site, Req2, State).
 
