@@ -1,0 +1,21 @@
+INSERT INTO aliases(alias, post_id) VALUES('/post/UaY64wFqM2ZBAAAE/packaging-vs-welcome-page', 28);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UaYcAPDfiVJBAAAC/running-iis-express', 41);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UaYZoPDfiVJBAAAB/a-visual-studio-extension-in-a-weekend', 31);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UaZAOQFqM2ZBAAAG/installing-windows-8-pro-on-acer-aspire-s7', 14);
+INSERT INTO aliases(alias, post_id) VALUES('/post/Ucnn_hQ-e4NTAAAC/creating-a-certificate-request-in-powershell', 35);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UlBoU0pDfb5YAAAB/dependency-injection-in-node-js', 27);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UoDvcyoQq3QlAAAC/failed-to-enumerate-ssl-bindings', 36);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USEmmRnLD1IgAAAB/what-is-this-', 39);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USEpG2o5Zo8gAAAB/msbuild-tasks-input-parameters-and-itemgroups', 17);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USpGRuyvVksDAAAB/migrating-www-differentpla-net-to-a-virtual-machine', 13);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USUdKqXDtCYDAAAB/hyper-v-remote-management', 37);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USxSMOyvVksDAAAC/migrating-www-differentpla-net-to-a-virtual-machine-part-2', 15);
+INSERT INTO aliases(alias, post_id) VALUES('/post/USxUL-yvVksDAAAD/migrating-www-differentpla-net-to-a-virtual-machine-part-3', 43);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UU2t4FFeONF8AAAB/bouncy-castle-extended-key-usage', 51);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UU8mex1VqooDAAAC/bouncy-castle-being-a-certificate-authority', 10);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UU8SJB1VqooDAAAB/bouncy-castle-subject-alternative-names', 11);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UUdxwXuYkMwsAAAC/how-do-i-convert-a-bouncy-castle-certificate-to-a-net-certificate-', 20);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UW69-yp74I4PAAAF/powershell-bouncy-castle-and-subject-alternative-names', 18);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UW6HrSp74I4PAAAC/how-to-do-net-reflection-in-powershell', 4);
+INSERT INTO aliases(alias, post_id) VALUES('/post/UXuGLSPbR387AAAB/the-case-of-the-missing-print-jobs', 49);
+
