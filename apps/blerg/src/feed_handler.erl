@@ -64,7 +64,7 @@ transform_item(BaseUrl, I) ->
                 {updated, [], [Updated]},
                 {author, [], [{name, ["Roger Lipscombe"]}]},
                 {link, [{href, Link}], []},
-                {content, [{type, "xhtml"}], [Content]}
+                {content, [{type, "html"}], [Content]}
                ]}.
 %    Teaser = proplists:get_value(body, I),
 
