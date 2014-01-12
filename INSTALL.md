@@ -43,6 +43,7 @@ Note that this emits some warnings when transferring from Linux to OS X. Ignore 
     sudo -u blerg bash
     cd /home/blerg/blerg
     git pull
+    make
     
     # Run migrations (not automatic at this point):
     psql -U blerg < migrations/whatever
