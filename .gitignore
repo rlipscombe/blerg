@@ -4,3 +4,4 @@ apps/*/ebin/
 erl_crash.dump
 log/
 doc/
+*.pg_dump.bz2
