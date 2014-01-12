@@ -9,5 +9,5 @@ compile: get-deps
 	./rebar compile
 
 dev: compile
-	PATH=.:${PATH} erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -s ssync -config dev.config
+	PATH=.:${PATH} erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -config dev.config
 

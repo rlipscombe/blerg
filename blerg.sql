@@ -2,11 +2,21 @@
  Add "local all blerg trust" to pg_hba.conf
  Also "host all blerg 127.0.0.1/32 trust" to pg_hba.conf
 
+ On Linux:
+
  echo "CREATE ROLE blerg LOGIN CREATEDB" | sudo -u postgres psql
  sudo -u postgres dropdb blerg
  echo "CREATE DATABASE blerg" | sudo -u postgres psql
  psql -U blerg < blerg.sql
-*/
+
+ On OSX:
+
+ echo "CREATE ROLE blerg LOGIN CREATEDB" | psql postgres
+ dropdb blerg
+ echo "CREATE DATABASE blerg" | psql postgres
+ psql -U blerg < blerg.sql
+
+ */
 
 CREATE TABLE users (
   id serial primary key,

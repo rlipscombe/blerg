@@ -35,6 +35,8 @@ On `dev`:
     sudo -l postgres createdb blerg
     bunzip2 < blerg.pg_dump.bz2 | psql -U blerg
 
+Note that this emits some warnings when transferring from Linux to OS X. Ignore them.
+
 ## Upgrading
 
     # Log into the production box:
