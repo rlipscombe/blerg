@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/yeti/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/yeti-custom.css" />
-    <link rel="feed" href="/feed" title="{{ site.title }}" />
+    <link rel="feed" href="/feed" title="{{ site.name }}" />
 
     {% block styles %}{% endblock %}
   </head>
