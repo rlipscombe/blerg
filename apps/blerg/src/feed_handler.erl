@@ -1,36 +1,43 @@
 -module(feed_handler).
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
--export([feed/0]).
+
+-record(state, {base_url, this_url}).
 
 init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+    Scheme = "http",
+    {Host, Req2} = cowboy_req:host(Req),
+    {Port, Req3} = cowboy_req:port(Req2),
+    {Path, Req4} = cowboy_req:path(Req3),
+    State = #state{base_url = create_base_url(Scheme, Host, Port),
+                   this_url = create_this_url(Scheme, Host, Port, Path)},
+    {ok, Req4, State}.
 
-handle(Req, State) ->
-    %Title = "Roger's Blog",
-    %{ok, Rev} = application:get_key(blerg, vsn),
-    %Site = [{name, "Roger's Blog"}, {rev, Rev}],
+handle(Req, #state{this_url = ThisUrl, base_url = BaseUrl} = State) ->
+    Title = "Roger's Blog",
     %Headers = [{<<"content-type">>, <<"application/atom+xml">>}],
     Headers = [{<<"content-type">>, <<"text/xml">>}],
-    Body = feed(),
+    Items = posts:feed(),
+    Body = feed(Title, ThisUrl, BaseUrl, Items),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.
 
-feed() ->
-    Title = "Roger's Blog",
-    Link = "http://localhost:4000/feed",
-    Items = posts:feed(),
-    feed(Title, Link, Items).
+create_base_url(Scheme, Host, Port) ->
+    Scheme ++ "://" ++ binary_to_list(Host) ++ ":" ++ integer_to_list(Port).
 
-feed(Title, Link, Items) ->
+create_this_url(Scheme, Host, Port, Path) ->
+    Scheme ++ "://" ++ binary_to_list(Host) ++ ":" ++ integer_to_list(Port) ++ Path.
+
+feed(Title, Link, BaseUrl, Items) ->
     UpdatedAt = get_updated_at(Items),
     FeedDetails = [{title, [], [Title]},
-                   {link, [{href, Link}], []},
-                   {updated, [], [binary_to_list(iso8601:format(UpdatedAt))]}],
-    FeedItems = [transform_item(I) || I <- Items],
+                   {link, [{href, Link}, {rel, "self"}], []},
+                   {updated, [], [binary_to_list(iso8601:format(UpdatedAt))]},
+                   {id, [], [Link]}],
+    FeedItems = [transform_item(BaseUrl, I) || I <- Items],
     Feed = [{feed, [{xmlns, "http://www.w3.org/2005/Atom"}],
              FeedDetails ++ FeedItems}],
 
@@ -44,16 +51,20 @@ get_updated_at([]) ->
 get_updated_at([H|_]) ->
     proplists:get_value(created_at, H).
 
-transform_item(I) ->
+transform_item(BaseUrl, I) ->
     Id = proplists:get_value(id, I),
     Title = binary_to_list(proplists:get_value(title, I)),
+    Body = proplists:get_value(body, I),
     CreatedAt = proplists:get_value(created_at, I),
     Updated = binary_to_list(iso8601:format(CreatedAt)),
-    Link = "http://localhost:4000/post/" ++ integer_to_list(Id),
+    Link = BaseUrl ++ "/post/" ++ integer_to_list(Id),
+    Content = "<div>" ++ markdown:conv(binary_to_list(Body)) ++ "</div>",
     {entry, [], [
                 {title, [], [Title]},
                 {updated, [], [Updated]},
-                {link, [{href, Link}], []}
+                {author, [], [{name, ["Roger Lipscombe"]}]},
+                {link, [{href, Link}], []},
+                {content, [{type, "xhtml"}], [Content]}
                ]}.
 %    Teaser = proplists:get_value(body, I),
 
