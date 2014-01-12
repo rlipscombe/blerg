@@ -19,8 +19,40 @@ terminate(_Reason, _Req, _State) ->
     ok.
 
 feed() ->
+    Title = "Roger's Blog",
+    Link = "http://localhost:4000/feed",
+    Description = Title,
+    Items = posts:feed(),
+    feed(Title, Link, Description, Items).
+
+feed(Title, Link, Description, Items) ->
+    ChannelDetails = [{title, [], [Title]},
+                      {link, [], [Link]},
+                      {description, [], [Description]}
+                      % TODO: pubDate, lastBuildDate?
+                      % TODO: image?
+                     ],
+    ChannelItems = [transform_item(I) || I <- Items],
+    Feed = [{rss, [{version, "2.0"}],
+             [{channel, [], ChannelDetails ++ ChannelItems}]}],
+
     Prolog = [],
-    Feed = [{rss, [{version, "2.0"}], [{channel, [], []}]}],
     Xml = xmerl:export_simple(Feed, xmerl_xml, Prolog),
     unicode:characters_to_binary(Xml).
+
+transform_item(I) ->
+    Title = binary_to_list(proplists:get_value(title, I)),
+    {item, [], [
+                {title, [], [Title]}]}.
+
+%    Id = proplists:get_value(id, I),
+%    Link = "http://localhost:4000/post/" ++ Id,
+%    Teaser = proplists:get_value(body, I),
+%    PubDate = proplists:get_value(created_at, I),
+%    {item, [], [
+%                {title, [], [Title]},
+%                {link, [], [Link]},
+%                {description, [], [Teaser]},
+%                {pubDate, [], [PubDate]},
+%                {guid, [], [Link]}]}.
 

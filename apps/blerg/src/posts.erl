@@ -1,22 +1,12 @@
 -module(posts).
--export([index/0, by_id/1]).
+-export([index/0, by_id/1, feed/0]).
 
 index() -> 
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, u.name AS author, p.created_at, p.body
                                          FROM posts p
                                          JOIN users u ON p.author_id = u.id
                                          ORDER BY p.created_at DESC"),
-    [convert_to_proplist(Cols, R) || R <- Rows].
-
-convert_to_proplist(Cols, Row) when is_tuple(Row) ->
-    convert_to_proplist(Cols, tuple_to_list(Row));
-convert_to_proplist(Cols, Row) when is_list(Row) ->
-    % C = {column,<<"id">>,int4,4,-1,1}
-    % R = Value
-    F = fun({column, Name, _, _, _, _}, R) ->
-            {list_to_atom(binary_to_list(Name)), R}
-    end,
-    lists:zipwith(F, Cols, Row).
+    convert_to_proplists(Cols, Rows).
 
 by_id(Id) when is_binary(Id) ->
     by_id(binary_to_list(Id));
@@ -33,4 +23,25 @@ by_id(Id) ->
         [] ->
             {error, not_found}
     end.
+
+feed() ->
+    {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, p.created_at, p.body
+                                       FROM posts p
+                                       WHERE p.created_at > CURRENT_DATE - INTERVAL '6 months'
+                                       ORDER BY p.created_at DESC
+                                       LIMIT 20"),
+    convert_to_proplists(Cols, Rows).
+
+convert_to_proplists(Cols, Rows) ->
+    [convert_to_proplist(Cols, R) || R <- Rows].
+
+convert_to_proplist(Cols, Row) when is_tuple(Row) ->
+    convert_to_proplist(Cols, tuple_to_list(Row));
+convert_to_proplist(Cols, Row) when is_list(Row) ->
+    % C = {column,<<"id">>,int4,4,-1,1}
+    % R = Value
+    F = fun({column, Name, _, _, _, _}, R) ->
+            {list_to_atom(binary_to_list(Name)), R}
+    end,
+    lists:zipwith(F, Cols, Row).
 
