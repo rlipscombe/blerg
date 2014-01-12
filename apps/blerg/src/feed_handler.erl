@@ -50,7 +50,7 @@ transform_item(I) ->
     CreatedAt = proplists:get_value(created_at, I),
     Updated = binary_to_list(iso8601:format(CreatedAt)),
     Link = "http://localhost:4000/post/" ++ integer_to_list(Id),
-    {item, [], [
+    {entry, [], [
                 {title, [], [Title]},
                 {updated, [], [Updated]},
                 {link, [{href, Link}], []}
