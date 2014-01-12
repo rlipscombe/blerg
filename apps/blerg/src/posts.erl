@@ -38,10 +38,12 @@ convert_to_proplists(Cols, Rows) ->
 convert_to_proplist(Cols, Row) when is_tuple(Row) ->
     convert_to_proplist(Cols, tuple_to_list(Row));
 convert_to_proplist(Cols, Row) when is_list(Row) ->
-    % C = {column,<<"id">>,int4,4,-1,1}
-    % R = Value
-    F = fun({column, Name, _, _, _, _}, R) ->
-            {list_to_atom(binary_to_list(Name)), R}
-    end,
-    lists:zipwith(F, Cols, Row).
+    lists:zipwith(fun convert_to_item/2, Cols, Row).
+
+% C = {column,<<"id">>,int4,4,-1,1}
+% R = Value
+convert_to_item({column, Name, timestamp, _, _, _}, {{Ye,Mo,Da},{Ho,Mi,Se}}) ->
+    {list_to_atom(binary_to_list(Name)), {{Ye,Mo,Da},{Ho,Mi,trunc(Se)}}};
+convert_to_item({column, Name, _Type, _, _, _}, R) ->
+    {list_to_atom(binary_to_list(Name)), R}.
 

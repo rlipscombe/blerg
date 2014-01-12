@@ -42,8 +42,10 @@ feed(Title, Link, Description, Items) ->
 
 transform_item(I) ->
     Title = binary_to_list(proplists:get_value(title, I)),
+    PubDate = ec_date:format("r", proplists:get_value(created_at, I)),
     {item, [], [
-                {title, [], [Title]}]}.
+                {title, [], [Title]},
+                {pubDate, [], [PubDate]}]}.
 
 %    Id = proplists:get_value(id, I),
 %    Link = "http://localhost:4000/post/" ++ Id,

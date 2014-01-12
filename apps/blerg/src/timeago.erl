@@ -19,6 +19,8 @@ now_to_epoch_seconds({Me,Se,_}) ->
 
 %% datetime_to_gregorian_seconds can't deal with fractional seconds; epgsql (for
 %% example) returns fractional seconds; so truncate the seconds.
+%% @todo there's a trunc(Se) in posts.erl, converting from DB to proplists; not sure if
+%% there's a good place for both.
 truncate_datetime_seconds({{Ye,Mo,Da},{Ho,Mi,Se}}) ->
     {{Ye,Mo,Da},{Ho,Mi,trunc(Se)}}.
 
