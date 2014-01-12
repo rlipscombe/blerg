@@ -42,7 +42,7 @@ feed(Title, Link, Description, Items) ->
 
 transform_item(I) ->
     Title = binary_to_list(proplists:get_value(title, I)),
-    PubDate = ec_date:format("r", proplists:get_value(created_at, I)),
+    PubDate = ec_date:format("r", proplists:get_value(created_at, I)) ++ " GMT",
     {item, [], [
                 {title, [], [Title]},
                 {pubDate, [], [PubDate]}]}.
