@@ -18,6 +18,9 @@ start_cowboy() ->
             {"/post/create", create_post_handler, []},
             {"/post/:id", post_handler, []},
 
+            % Syndication
+            {"/feed", feed_handler, []},
+
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
             {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
