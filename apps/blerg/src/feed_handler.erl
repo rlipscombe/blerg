@@ -15,8 +15,7 @@ init(_Type, Req, _Opts) ->
 
 handle(Req, #state{this_url = ThisUrl, base_url = BaseUrl} = State) ->
     Title = "Roger's Blog",
-    %Headers = [{<<"content-type">>, <<"application/atom+xml">>}],
-    Headers = [{<<"content-type">>, <<"text/xml">>}],
+    Headers = [{<<"content-type">>, <<"application/atom+xml">>}],
     Items = posts:feed(),
     Body = feed(Title, ThisUrl, BaseUrl, Items),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
