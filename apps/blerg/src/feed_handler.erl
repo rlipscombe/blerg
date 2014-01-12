@@ -25,11 +25,15 @@ handle(Req, #state{this_url = ThisUrl, base_url = BaseUrl} = State) ->
 terminate(_Reason, _Req, _State) ->
     ok.
 
+create_base_url("http", Host, 80) ->
+    "http://" ++ binary_to_list(Host);
+create_base_url("https", Host, 443) ->
+    "https://" ++ binary_to_list(Host);
 create_base_url(Scheme, Host, Port) ->
     Scheme ++ "://" ++ binary_to_list(Host) ++ ":" ++ integer_to_list(Port).
 
 create_this_url(Scheme, Host, Port, Path) ->
-    Scheme ++ "://" ++ binary_to_list(Host) ++ ":" ++ integer_to_list(Port) ++ Path.
+    create_base_url(Scheme, Host, Port) ++ Path.
 
 feed(Title, Link, BaseUrl, Items) ->
     UpdatedAt = get_updated_at(Items),
@@ -64,6 +68,7 @@ transform_item(BaseUrl, I) ->
                 {updated, [], [Updated]},
                 {author, [], [{name, ["Roger Lipscombe"]}]},
                 {link, [{href, Link}], []},
+                {id, [], [Link]},
                 {content, [{type, "html"}], [Content]}
                ]}.
 %    Teaser = proplists:get_value(body, I),
