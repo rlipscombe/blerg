@@ -31,8 +31,8 @@ On `prod`:
 On `dev`:
 
     scp prod:blerg.pg_dump.bz2 .
-    sudo -l postgres dropdb blerg
-    sudo -l postgres createdb blerg
+    sudo -u postgres dropdb blerg
+    sudo -u postgres createdb blerg
     bunzip2 < blerg.pg_dump.bz2 | psql -U blerg
 
 Note that this emits some warnings when transferring from Linux to OS X. Ignore them.
