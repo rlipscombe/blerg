@@ -1,0 +1,9 @@
+{% extends "_master.dtl" %}
+
+{% block content %}
+<div class="col-md-12">
+    <p>There are no posts tagged <span class="tag">{{ tag }}</span>.
+    </p>
+</div>
+{% endblock %}
+

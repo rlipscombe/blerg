@@ -18,6 +18,9 @@ start_cowboy() ->
             {"/post/create", create_post_handler, []},
             {"/post/:id", post_handler, []},
 
+            % tags
+            {"/tag/:tag", tag_handler, []},
+
             % Syndication
             {"/feed", feed_handler, []},
 

@@ -1,5 +1,5 @@
 -module(posts).
--export([index/0, by_id/1, feed/0]).
+-export([index/0, by_id/1, feed/0, tagged/1]).
 
 index() -> 
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, u.name AS author, p.created_at, p.body
@@ -30,6 +30,15 @@ feed() ->
                                        WHERE p.created_at > CURRENT_DATE - INTERVAL '6 months'
                                        ORDER BY p.created_at DESC
                                        LIMIT 20"),
+    convert_to_proplists(Cols, Rows).
+
+tagged(Tag) ->
+    {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, p.created_at, p.body
+                                      FROM posts p
+                                      INNER JOIN post_tags pt ON pt.post_id = p.id
+                                      INNER JOIN tags t ON t.id = pt.tag_id
+                                      WHERE t.name = $1
+                                       ORDER BY p.created_at DESC", [Tag]),
     convert_to_proplists(Cols, Rows).
 
 convert_to_proplists(Cols, Rows) ->
