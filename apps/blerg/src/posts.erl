@@ -33,6 +33,7 @@ feed() ->
     convert_to_proplists(Cols, Rows).
 
 tagged(Tag) ->
+    % @todo This returns an empty set for unknown tags; we might prefer an error.
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, p.created_at, p.body
                                       FROM posts p
                                       INNER JOIN post_tags pt ON pt.post_id = p.id

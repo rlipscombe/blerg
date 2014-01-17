@@ -11,6 +11,6 @@ CREATE TABLE post_tags(
     tag_id integer references tags(id)
 );
 
-CREATE UNIQUE INDEX post_tags_tag_id_idx ON post_tags(tag_id);
+CREATE INDEX post_tags_tag_id_idx ON post_tags(tag_id);
 CREATE UNIQUE INDEX post_tags_post_id_tag_id_idx ON post_tags(post_id, tag_id);
 
