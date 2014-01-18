@@ -21,3 +21,24 @@ footer.navbar a {
     color: #bbddff;
 }
 
+ul.tags {
+    margin: 0;
+    margin-bottom: 7px;
+    padding-left: 0;
+}
+
+ul.tags a {
+  color: #fff;
+  text-decoration: none;
+}
+
+ul.tags > li {
+  background-color: #008cba;
+  border-bottom: 1px solid #006687;
+  border-right: 1px solid #006687;
+  display: inline;
+  margin-right: 8px;
+  padding: 1px 9px 2px 9px;
+  color: #fff;
+}
+

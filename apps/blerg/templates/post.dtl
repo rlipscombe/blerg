@@ -7,6 +7,13 @@
     <span class="created_at" title="{{ post.created_at_iso }}">{{ post.created_at_ago }}</span>
 </div>
 <p>{{ post.body }}</p>
+<div class="tags">
+    <ul class="tags">
+    {% for t in post.tags %}
+    <li><a href="/tag/{{t}}">{{ t }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
 </article>
 {% endblock %}
 

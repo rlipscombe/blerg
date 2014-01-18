@@ -13,6 +13,15 @@ by_id(Id) when is_binary(Id) ->
 by_id(Id) when is_list(Id) ->
     by_id(list_to_integer(Id));
 by_id(Id) ->
+    % @todo Use exceptions instead?
+    case post_by_id(Id) of
+        {ok, Post} ->
+            Tags = tags_for_post_id(Id),
+            {ok, [{tags, Tags}|Post]};
+        E -> E
+    end.
+
+post_by_id(Id) ->
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, u.name AS author, p.created_at, p.body
                                         FROM posts p
                                         JOIN users u ON p.author_id = u.id
@@ -23,6 +32,13 @@ by_id(Id) ->
         [] ->
             {error, not_found}
     end.
+
+tags_for_post_id(Id) ->
+    {ok, _Cols, Rows} = blerg_db:equery("SELECT t.name
+                                      FROM tags t
+                                      JOIN post_tags pt ON pt.tag_id = t.id
+                                       WHERE pt.post_id = $1", [Id]),
+    [T || {T} <- Rows].
 
 feed() ->
     {ok, Cols, Rows} = blerg_db:equery("SELECT p.id, p.title, p.created_at, p.body
