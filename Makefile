@@ -9,7 +9,7 @@ compile: get-deps
 	./rebar compile
 
 c:
-	./rebar compile
+	./rebar compile skip_deps=true
 
 # can't use ln -sf, because it'll put the symlink inside the destination;
 # can't use ln -sfT, because that's not supported on OS X, so do this:
