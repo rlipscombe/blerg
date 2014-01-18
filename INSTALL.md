@@ -40,6 +40,9 @@ Note that this emits some warnings when transferring from Linux to OS X. Ignore 
 ## Upgrading
 
     # Log into the production box:
+    ssh prod
+
+    # Pull the new code:
     sudo -u blerg bash
     cd /home/blerg/blerg
     git pull
