@@ -1,5 +1,9 @@
 {% extends "_master.dtl" %}
 
+{% block head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
 {% block content %}
 <div class="col-md-12">
 	<h1>{{ title }}</h1>
