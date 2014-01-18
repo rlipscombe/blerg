@@ -54,7 +54,9 @@ error_hook(Code, Headers, <<>>, Req)
 
     % Note that I'm ignoring the fact that this returns Req2.
     {Path, _} = cowboy_req:path(Req),
-    lager:warning("HTTP Error ~p when ~p", [Code, Path]),
+    {Method, _} = cowboy_req:method(Req),
+    {Headers, _} = cowboy_req:headers(Req),
+    lager:warning("HTTP Error ~p when ~p ~p ~p", [Code, Method, Path, Headers]),
 
     Body = ["HTTP Error ", integer_to_list(Code), $\n],
     Headers2 = lists:keyreplace(<<"content-length">>, 1, Headers,
