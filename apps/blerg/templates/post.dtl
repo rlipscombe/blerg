@@ -9,11 +9,24 @@
 <p>{{ post.body }}</p>
 <div class="tags">
     <ul class="tags">
-    {% for t in post.tags %}
-    <li><a href="/tag/{{t}}">{{ t }}</a></li>
-    {% endfor %}
+        {% for t in post.tags %}
+        <li><a href="/tag/{{t}}">{{ t }}</a></li>
+        {% endfor %}
     </ul>
 </div>
 </article>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        // Add the anchor links
+        $('div.body > h1, h2, h3, h4, h5, h6').each(function(i) {
+            $(this).append(
+            '<a class="anchorlink" title="Link to ' +
+                $(this).text() + '" href="#' + $(this).attr('id') + '"></a>');
+            });
+        });
+</script>
 {% endblock %}
 
