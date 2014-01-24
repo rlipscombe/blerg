@@ -49,7 +49,7 @@ error_hook(404, _Headers, <<>>, Req) ->
         {ok, Url} -> redirect(Path, Url, Req);
         _ -> not_found(Path, Req)
     end;
-error_hook(Code, Headers, <<>>, Req)
+error_hook(Code, _Headers, <<>>, Req)
         when is_integer(Code), Code >= 400 ->
 
     % Note that I'm ignoring the fact that this returns Req2.
