@@ -27,6 +27,8 @@ start_cowboy() ->
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
             {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
+            {"/fonts/[...]", cowboy_static, {priv_dir, blerg, "fonts"}},
+            {"/css/fonts/[...]", cowboy_static, {priv_dir, blerg, "fonts"}},
             {"/css/[...]", cowboy_static, {priv_dir, blerg, "css"}},
             {"/js/[...]", cowboy_static, {priv_dir, blerg, "js"}},
             {"/img/[...]", cowboy_static, {priv_dir, blerg, "img"}}
