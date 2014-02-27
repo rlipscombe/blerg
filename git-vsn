@@ -10,10 +10,11 @@ REV=$(git rev-parse --short HEAD)
 MODS=$(git diff-index --quiet HEAD || echo "+")
 
 # Which branch?
-BRANCH=$(git branch | grep "^\*" | cut -c3-)
+BRANCH=$(git symbolic-ref HEAD 2>/dev/null) || BRANCH="HEAD"
 
 # Do we have committed-but-not-pushed changes?
-AHEAD=$(git rev-list --count HEAD ^origin/$BRANCH)
+# Note: if the branch is invalid (detached HEAD), assume we're ahead.
+AHEAD=$(git rev-list --count HEAD "^origin/$BRANCH" 2>/dev/null) || AHEAD=1
 if [ $AHEAD != "0" ]; then
     MODS="+"
 fi
@@ -29,8 +30,3 @@ DATE=$(date -u +%Y%m%dT%H%M%S)
 # master-1fb111e-20140201T123012        (untagged)
 # master-f27cc2c+-20140227T185525       (local modifications)
 echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-$DATE"
-
-# BUG: With detached head, you get:
-#  fatal: bad revision '^origin/(detached'
-#  ./git-vsn: line 10: [: !=: unary operator expected
-#  (detached from v0.4)-3916b84-v0.4-20140227T185342
