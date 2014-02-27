@@ -28,8 +28,11 @@ TAG=$(git describe --exact-match 2>/dev/null)
 # Today's date, in ISO format.
 DATE=$(date -u +%Y%m%dT%H%M%S)
 
+# user@host
+WHO=${USERNAME}@${HOSTNAME}
+
 # e.g.
-# master-3916b84-v0.4-20140107T122358   (tagged)
-# master-1fb111e-20140201T123012        (untagged)
-# master-f27cc2c+-20140227T185525       (local modifications)
-echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-$DATE"
+# master-3916b84-v0.4-user@host-20140107T122358   (tagged)
+# master-1fb111e-user@host-20140201T123012        (untagged)
+# master-f27cc2c+-user@host-20140227T185525       (local modifications)
+echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-${WHO}-$DATE"
