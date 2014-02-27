@@ -3,16 +3,34 @@
 # Update status
 git status >/dev/null
 
+# The 7-SHA, e.g. REV=1fb111e
 REV=$(git rev-parse --short HEAD)
+
+# Local/staged modifications?
 MODS=$(git diff-index --quiet HEAD || echo "+")
+
+# Which branch?
 BRANCH=$(git branch | grep "^\*" | cut -c3-)
+
+# Do we have committed-but-not-pushed changes?
 AHEAD=$(git rev-list --count HEAD ^origin/$BRANCH)
 if [ $AHEAD != "0" ]; then
     MODS="+"
 fi
+
+# Is there a tag corresponding to this revision?
 TAG=$(git describe --exact-match 2>/dev/null)
 
+# Today's date, in ISO format.
 DATE=$(date -u +%Y%m%dT%H%M%S)
 
+# e.g.
+# master-3916b84-v0.4-20140107T122358   (tagged)
+# master-1fb111e-20140201T123012        (untagged)
+# master-f27cc2c+-20140227T185525       (local modifications)
 echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-$DATE"
 
+# BUG: With detached head, you get:
+#  fatal: bad revision '^origin/(detached'
+#  ./git-vsn: line 10: [: !=: unary operator expected
+#  (detached from v0.4)-3916b84-v0.4-20140227T185342
