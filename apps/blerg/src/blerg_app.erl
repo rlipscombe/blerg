@@ -4,7 +4,6 @@
 
 start(_StartType, _StartArgs) ->
     ok = start_cowboy(),
-    ok = start_poolboy(),
     blerg_sup:start_link().
 
 stop(_State) ->
@@ -39,10 +38,6 @@ start_cowboy() ->
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
                                  {onresponse, fun error_hook/4}]),
-    ok.
-
-start_poolboy() ->
-    {ok, _} = blerg_db_sup:start_link(),
     ok.
 
 error_hook(404, _Headers, <<>>, Req) ->
