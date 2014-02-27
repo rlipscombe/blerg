@@ -10,7 +10,10 @@ REV=$(git rev-parse --short HEAD)
 MODS=$(git diff-index --quiet HEAD || echo "+")
 
 # Which branch?
-BRANCH=$(git symbolic-ref HEAD 2>/dev/null) || BRANCH="HEAD"
+# See http://stackoverflow.com/a/1593487/8446
+BRANCH=$(git symbolic-ref --quiet HEAD 2>/dev/null)
+BRANCH=${BRANCH##refs/heads/}
+BRANCH=${BRANCH:-"HEAD"}
 
 # Do we have committed-but-not-pushed changes?
 # Note: if the branch is invalid (detached HEAD), assume we're ahead.
