@@ -1,3 +1,5 @@
+BASE_DIR  = $(shell pwd)
+
 .PHONY: all rebar get-deps compile
 
 all: get-deps compile
@@ -21,9 +23,12 @@ ace: get-deps
 	-rm priv/js/ace
 	ln -s ../../deps/ace/src-min-noconflict priv/js/ace
 
+ERL_LIBS := $(BASE_DIR):$(ERL_LIBS)
+
+export ERL_LIBS
+
 dev: compile ace
-	PATH=.:${PATH} erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
+	erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
 
 d: c
-	PATH=.:${PATH} erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
-
+	erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
