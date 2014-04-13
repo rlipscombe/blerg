@@ -4,9 +4,9 @@
 <article>
 <h1>{{ post.title }}</h1>
 <div class="details">
-    <span class="created_at" title="{{ post.created_at_iso }}">{{ post.created_at_ago }}</span>
+    <span class="created_at" title="{{ post.created_at_iso|safe }}">{{ post.created_at_ago|safe }}</span>
 </div>
-<p>{{ post.body }}</p>
+<p>{{ post.body|safe }}</p>
 <div class="tags">
     <ul class="tags">
         {% for t in post.tags %}

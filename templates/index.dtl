@@ -20,13 +20,13 @@
 <div class="col-md-9">
   {% for p in posts %}
   <article>
-  <h1><a href="/post/{{ p.id }}">{{ p.title }}</a></h1>
+  <h1><a href="/post/{{ p.id|safe }}">{{ p.title }}</a></h1>
   <div class="details">
-    <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago }}</span>
+    <span class="created_at" title="{{ p.created_at_iso }}">{{ p.created_at_ago|safe }}</span>
   </div>
-  <p>{{ p.teaser }}</p>
+  <p>{{ p.teaser|safe }}</p>
   {% if p.read_more %}
-  <a href="/post/{{ p.id }}">&raquo; read more</a>
+  <a href="/post/{{ p.id|safe }}">&raquo; read more</a>
   {% endif %}
   </article>
   {% endfor %}
