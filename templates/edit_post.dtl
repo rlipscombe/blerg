@@ -42,13 +42,15 @@
             </div>
             <div id="editor">Editor goes here.</div>
 
-            <input type="hidden" name="markdown"/>
-
             <div class="form-group">
                 <div class="col-sm-7">
                     <button type="submit" id="do-save" class="btn btn-primary">Save</button>
                 </div>
             </div>
+        
+            <input type="input" id="id" name="id" />
+            <!-- TODO: Do we still need the hidden markdown field? -->
+            <input type="hidden" id="markdown" name="markdown"/>
         </form>
     </div>
 

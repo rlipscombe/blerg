@@ -18,10 +18,15 @@ function goPreview() {
 }
 
 function doSave() {
+    var id = $('#id').val();
     var title = $('#title').val();
     var markdown = editor.getValue();
+
+    // TODO: Why are we still copying this into the hidden field?
     $('input[name=markdown]').val(markdown);
+
     var data = {
+        id: id,
         title: title,
         markdown: markdown
     };
@@ -31,15 +36,13 @@ function doSave() {
         type: 'POST',
         data: data,
         success: function(data, status, xhr) {
-            console.log(data);
-            console.log(status);
+            // TODO: Some kind of splash -- saved.
+            $('input[name=id]').val(data.id);
         },
         error: function(xhr, status, err) {
-            console.log(status);
-            console.log(err);
+            // TODO: Some kind of splash -- failed.
         },
         complete: function(xhr, status) {
-            console.log(status);
             $('#do-save').prop('disabled', false);
         }
     });
@@ -49,12 +52,10 @@ function doSave() {
 $(document).ready(function() {
     $('#go-preview').click(goPreview);
     $('#go-edit').click(goEdit);
-
-    goEdit();
-
     $('#do-save').click(doSave);
 
     editor.setTheme('ace/theme/textmate');
     editor.getSession().setMode('ace/mode/markdown');
+    
+    goEdit();
 });
-

@@ -16,6 +16,7 @@ start_cowboy() ->
             % posts
             {"/post/create", create_post_handler, []},
             {"/post/save", save_post_handler, []},
+            {"/post/:id/edit", edit_post_handler, []},
             {"/post/:id", post_handler, []},
 
             % tags
@@ -61,9 +62,12 @@ error_hook(Code, _Headers, <<>>, Req)
                                 {<<"content-length">>, integer_to_list(iolist_size(Body))}),
     {ok, Req2} = cowboy_req:reply(Code, Headers2, Body, Req),
     Req2;
-error_hook(Code, _Headers, _Body, Req) ->
+error_hook(Code, _Headers, _Body, Req)
+        when is_integer(Code), Code =/= 200 ->
     {Path, _} = cowboy_req:path(Req),
     lager:info("~p when ~p", [Code, Path]),
+    Req;
+error_hook(_Code, _Headers, _Body, Req) ->
     Req.
 
 redirect(Path, Url, Req) when is_list(Url) ->
