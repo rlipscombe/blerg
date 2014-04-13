@@ -6,7 +6,7 @@
     #tab-edit, #tab-preview { display: block; margin-left: 0 }
     #editor { position: relative; border: 1px solid #008cba; }
     @media (min-width: 1200px) {
-        #editor { width: 1170px; height: 600px; margin-left: 0; margin-bottom: 0.8em; }
+        #editor { width: 1170px; height: 460px; margin-left: 0; margin-bottom: 0.8em; }
     }
     @media (min-width: 979px) and (max-width: 1200px) {
         #editor { width: 960px; height: 500px; margin-bottom: 0.8em; }
