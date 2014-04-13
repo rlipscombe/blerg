@@ -11,6 +11,10 @@ compile: get-deps
 c:
 	./rebar compile skip_deps=true
 
+clean:
+	./rebar clean
+	rm -rf deps
+
 # can't use ln -sf, because it'll put the symlink inside the destination;
 # can't use ln -sfT, because that's not supported on OS X, so do this:
 ace: get-deps

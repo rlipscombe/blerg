@@ -1,5 +1,5 @@
 deps/
-apps/*/ebin/
+ebin/
 
 erl_crash.dump
 log/
