@@ -18,12 +18,12 @@ clean:
 # can't use ln -sf, because it'll put the symlink inside the destination;
 # can't use ln -sfT, because that's not supported on OS X, so do this:
 ace: get-deps
-	-rm apps/blerg/priv/js/ace
-	ln -s ../../../../deps/ace/src-min-noconflict apps/blerg/priv/js/ace
+	-rm priv/js/ace
+	ln -s ../../deps/ace/src-min-noconflict priv/js/ace
 
 dev: compile ace
-	PATH=.:${PATH} erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -config dev.config
+	PATH=.:${PATH} erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
 
 d: c
-	PATH=.:${PATH} erl -pa apps/*/ebin -pz deps/*/ebin -sname blerg -s blerg -config dev.config
+	PATH=.:${PATH} erl -pa ebin -pz deps/*/ebin -sname blerg -s blerg -config etc/dev.config
 
