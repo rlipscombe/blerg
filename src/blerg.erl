@@ -3,4 +3,3 @@
 
 start() ->
     blerg_util:ensure_started(blerg).
-
