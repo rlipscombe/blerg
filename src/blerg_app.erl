@@ -15,6 +15,7 @@ start_cowboy() ->
 
             % posts
             {"/post/create", create_post_handler, []},
+            {"/post/save", save_post_handler, []},
             {"/post/:id", post_handler, []},
 
             % tags

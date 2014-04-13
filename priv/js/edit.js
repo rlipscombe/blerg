@@ -18,9 +18,32 @@ function goPreview() {
 }
 
 function doSave() {
+    var title = $('#title').val();
     var markdown = editor.getValue();
     $('input[name=markdown]').val(markdown);
-    return true;    // true => actually post the form.
+    var data = {
+        title: title,
+        markdown: markdown
+    };
+
+    $('#do-save').prop('disabled', true);
+    $.ajax('/post/save', {
+        type: 'POST',
+        data: data,
+        success: function(data, status, xhr) {
+            console.log(data);
+            console.log(status);
+        },
+        error: function(xhr, status, err) {
+            console.log(status);
+            console.log(err);
+        },
+        complete: function(xhr, status) {
+            console.log(status);
+            $('#do-save').prop('disabled', false);
+        }
+    });
+    return false;    // false => don't actually post the form.
 }
 
 $(document).ready(function() {
