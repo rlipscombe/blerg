@@ -6,9 +6,21 @@ init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    lager:debug("Save: ~p", [Req]),
     {ok, Form, Req2} = cowboy_req:body_qs(Req),
-    lager:debug("Form: ~p", [Form]),
+
+    % Note: we don't simply use the incoming
+    % proplist -- it's not trusted.
+    Title = proplists:get_value(<<"title">>, Form),
+    Body = proplists:get_value(<<"markdown">>, Form),
+
+    AuthorId = 1,       % @todo It's always me at the moment.
+    CreatedAt = calendar:now_to_universal_time(os:timestamp()),
+    posts:save([{title, Title},
+                {author_id, AuthorId},
+                {created_at, CreatedAt},
+                {body, Body}]),
+
+    % @todo Return JSON with the ID.
     Headers = [{<<"content-type">>, <<"text/plain">>}],
     {ok, Req3} = cowboy_req:reply(200, Headers, <<"OK">>, Req2),
     {ok, Req3, State}.

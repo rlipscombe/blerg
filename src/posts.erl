@@ -1,5 +1,6 @@
 -module(posts).
 -export([index/0, by_id/1, feed/0, tagged/1]).
+-export([save/1]).
 
 index() -> 
     {ok, Cols, Rows} = blerg_db:equery(
@@ -62,6 +63,17 @@ tagged(Tag) ->
             " WHERE t.name = $1"
             " ORDER BY p.created_at DESC", [Tag]),
     convert_to_proplists(Cols, Rows).
+
+save(Post) ->
+    Title = proplists:get_value(title, Post),
+    AuthorId = proplists:get_value(author_id, Post),
+    CreatedAt = proplists:get_value(created_at, Post),
+    Body = proplists:get_value(body, Post),
+
+    {ok, 1, _Cols, [{Id}]} = blerg_db:equery(
+            "INSERT INTO POSTS(title, author_id, created_at, body) VALUES($1, $2, $3, $4) RETURNING id",
+            [Title, AuthorId, CreatedAt, Body]),
+    {ok, Id}.
 
 convert_to_proplists(Cols, Rows) ->
     [convert_to_proplist(Cols, R) || R <- Rows].
