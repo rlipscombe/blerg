@@ -16,6 +16,7 @@ handle(Req, State) ->
     % Note: we don't simply use the incoming
     % proplist -- it's not trusted.
     Title = proplists:get_value(<<"title">>, Form),
+    % @todo Rename 'markdown' to 'body'?
     Body = proplists:get_value(<<"markdown">>, Form),
 
     AuthorId = 1,       % @todo It's always me at the moment.

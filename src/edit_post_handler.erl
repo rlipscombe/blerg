@@ -6,13 +6,21 @@ init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    % @todo This is fairly similar to create_post_handler; consider merging the two.
-    Title = "Create Post",
     Site = [{name, "Roger's Blog"}],
+
+    % @todo This is fairly similar to create_post_handler; consider merging the two.
+
+    {Id, Req2} = cowboy_req:binding(id, Req),
+
+    {ok, Post} = posts:by_id(Id),
+    lager:debug("Post ~p", [Post]),
+
+    Title = proplists:get_value(title, Post),
+
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}]),
-    {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
-    {ok, Req2, State}.
+    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}, {post, Post}]),
+    {ok, Req3} = cowboy_req:reply(200, Headers, Body, Req2),
+    {ok, Req3, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.

@@ -37,10 +37,10 @@
         <form role="form" class="form-horizontal" method="post">
             <div class="form-group">
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" id="title" name="title" placeholder="Title"/>
+                    <input class="form-control" type="text" id="title" name="title" placeholder="Title" value="{{ post.title }}"/>
                 </div>
             </div>
-            <div id="editor">Editor goes here.</div>
+            <div id="editor">{{ post.body }}</div>
 
             <div class="form-group">
                 <div class="col-sm-7">

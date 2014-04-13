@@ -6,10 +6,13 @@ init(_Type, Req, _Opts) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    Title = "Create Post",
     Site = [{name, "Roger's Blog"}],
+
+    Title = "Create Post",
+    Post = [{title, ""}, {body, <<"Editor goes here.">>}],
+
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}]),
+    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}, {post, Post}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State}.
 
