@@ -38,10 +38,30 @@ get_cookie(_SessionId) ->
     undefined.
 
 transcript() ->
+    % Session ID
+    SessionId = crypto:rand_bytes(16),
+
+    % Expiry
+    {Me, Se, _} = os:timestamp(),
+    Now = (Me * 1000 * 1000) + Se,
+    TTL = 2 * 60 * 60,
+    Then = Now + TTL,
+
+    % Payload
+    Data = <<SessionId/binary, Then:64/signed-little>>,
+
     % 16 bytes is 128 bits. As far as I can work out, that's plenty, provided
     % the key is kept secret. The key is then kept in an ETS table, keyed by session ID.
     Key = crypto:rand_bytes(16),
-    % This is just the random session ID. It doesn't need to be too long.
-    Data = crypto:rand_bytes(16),
     Mac = crypto:hmac(sha256, Key, Data),
-    Mac.
+
+    % Also read this: http://www.cs.umass.edu/~kevinfu/papers/webauth_tr.pdf
+    % See http://stackoverflow.com/a/3771421/8446 for converting this to a hex
+    % string suitable for a cookie, but I've used the shorter, slower variant.
+    % See this note about base64-encoding for cookies: http://en.wikipedia.org/wiki/Base64#URL_applications
+    Cookie = <<Data/binary, Mac/binary>>,
+    CookieText = lists:flatten([io_lib:format("~2.16.0B", [X]) || <<X:8>> <= Cookie]),
+    CookieText.
+
+% Generates something like
+% "9106D7F2C44972CD8874D6EC6F16E2E7671D4B53000000002F1E7F33AB182DFF4D1C5FC75615BFFAC303F6E1D60689225558245D9EC55FD9"
