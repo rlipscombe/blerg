@@ -1,6 +1,9 @@
 #!/usr/bin/env escript
 %%! -pa ../deps/epgsql/ebin ../deps/iso8601/ebin
 
+main([]) ->
+    existing_atoms(), % Gotta call it from somewhere to shut up the warning...
+    io:put_chars("Usage:\n\timport dir-name\n");
 main([Dir]) ->
     {ok, C} = pgsql:connect("localhost", "blerg", "", [{database, "blerg"}]),
     {ok, Files} = file:list_dir(Dir),
@@ -8,7 +11,7 @@ main([Dir]) ->
     import_files([filename:join(Dir, X) || X <- lists:filter(Pred, Files)], C),
     pgsql:close(C).
 
-import_files([], C) ->
+import_files([], _C) ->
     ok;
 import_files([H|T], C) ->
     import_file(H, C),
@@ -31,16 +34,6 @@ import_file(F, C) ->
     Body = proplists:get_value(body, Post),
     pgsql:equery(C, "INSERT INTO posts(title, author_id, created_at, body) VALUES($1, $2, $3, $4)",
                  [Title, AuthorId, CreatedAt, Body]).
-
-create_url({{Ye,Mo,Da},{_,_,_}}, Title) ->
-    Slug = create_slug(Title),
-    io_lib:format("~4..0B/~2..0B/~2..0B/~s", [Ye, Mo, Da, Slug]).
-
-create_slug(Title) ->
-    string:to_lower(
-        re:replace(
-            re:replace(Title, "[^A-Za-z0-9]", "-", [global]),
-            "-{2,}", "-", [global, {return, list}])).
 
 parse(Lines) ->
     parse(init, Lines, []).
