@@ -27,7 +27,7 @@ import_file(F, C) ->
     Date = proplists:get_value(date, Post),
     CreatedAt = case Date of
         undefined ->
-            iso8601:parse("2013-12-31T20:22:00Z");
+            filelib:last_modified(F);
         _ ->
             iso8601:parse(Date)
     end,
