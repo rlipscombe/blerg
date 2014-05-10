@@ -45,9 +45,12 @@ start_cowboy() ->
     Host = {'_', Routes},
     Dispatch = cowboy_router:compile([Host]),
 
+    OnResponse = fun(Code, Headers, Body, Req) ->
+            error_hook:onresponse(Code, Headers, Body, Req, Opts)
+    end,
     {ok, _} = cowboy:start_http(http, 100,
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
                                  {onrequest, fun session_hook:onrequest/1},
-                                 {onresponse, fun error_hook:onresponse/4}]),
+                                 {onresponse, OnResponse}]),
     ok.

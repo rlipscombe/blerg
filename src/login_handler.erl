@@ -11,6 +11,7 @@ handle(Req, State) ->
     handle(Method, Req2, State).
 
 handle(<<"POST">>, Req, State) ->
+    {ok, CookieOpts} = application:get_env(blerg, cookies),
     {ok, Form, Req2} = cowboy_req:body_qs(Req),
 
     UserName = proplists:get_value(<<"username">>, Form),
@@ -31,10 +32,11 @@ handle(<<"POST">>, Req, State) ->
             Hash2 = binary_to_list(Hash),
             case bcrypt:hashpw(Password, Hash2) of
                 {ok, Hash2} ->
-                    User = [{name, UserName}],
+                    User = [{name, UserName},
+                            {can, [{create_posts, true}, {edit_posts, true}]}],
                     Session = [{user, User}],
                     {ok, SessionId} = session_store:new_session(Session),
-                    Req3 = cowboy_req:set_resp_cookie(<<"sessionid">>, SessionId, [{path, "/"}], Req2),
+                    Req3 = cowboy_req:set_resp_cookie(<<"sessionid">>, SessionId, CookieOpts, Req2),
                     Req4 = redirect:to("/", Req3),
                     {ok, Req4, State};
                 _ ->

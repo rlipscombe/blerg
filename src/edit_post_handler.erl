@@ -10,7 +10,8 @@ handle(Req, State) ->
 
     % @todo This is fairly similar to create_post_handler; consider merging the two.
 
-    {Id, Req2} = cowboy_req:binding(id, Req),
+    {User, Req2} = cowboy_req:meta(user, Req),
+    {Id, Req3} = cowboy_req:binding(id, Req2),
 
     {ok, Post} = posts:by_id(Id),
     lager:debug("Post ~p", [Post]),
@@ -18,9 +19,9 @@ handle(Req, State) ->
     Title = proplists:get_value(title, Post),
 
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}, {post, Post}]),
-    {ok, Req3} = cowboy_req:reply(200, Headers, Body, Req2),
-    {ok, Req3, State}.
+    {ok, Body} = edit_post_dtl:render([{title, Title}, {site, Site}, {post, Post}, {user, User}]),
+    {ok, Req4} = cowboy_req:reply(200, Headers, Body, Req3),
+    {ok, Req4, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.

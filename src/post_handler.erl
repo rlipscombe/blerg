@@ -21,6 +21,7 @@ reply({ok, P}, Site, User, Req, State) ->
     {ok, Req2, State};
 reply({error, not_found}, Site, User, Req, State) ->
     {Path, _} = cowboy_req:path(Req),
+    lager:warning("Not found: ~p", [Path]),
     Headers = [{<<"content-type">>, <<"text/html">>}],
     {ok, Body} = not_found_dtl:render([{site, Site}, {user, User}, {path, Path}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),

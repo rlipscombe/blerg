@@ -2,12 +2,18 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    % @todo Site should be passed in Opts.
-    % @todo User should be figured out here?
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    {ok, Req, Opts}.
 
 handle(Req, State) ->
+    {User, Req2} = cowboy_req:meta(user, Req),
+    handle(Req2, User, State).
+
+handle(Req, undefined, State) ->
+    lager:warning("Unauthorized save_post"),
+    {ok, Req2} = cowboy_req:reply(401, [], ["Unauthorized"], Req),
+    {ok, Req2, State};
+handle(Req, User, State) ->
     {ok, Form, Req2} = cowboy_req:body_qs(Req),
 
     % If the incoming request already has an ID, then it's an update;
@@ -19,7 +25,7 @@ handle(Req, State) ->
     % @todo Rename 'markdown' to 'body'?
     Body = proplists:get_value(<<"markdown">>, Form),
 
-    AuthorId = 1,       % @todo It's always me at the moment.
+    AuthorId = proplists:get_value(id, User),
     CreatedAt = calendar:now_to_universal_time(os:timestamp()),
 
     Post = [{title, Title},

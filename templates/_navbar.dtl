@@ -4,7 +4,7 @@
       <a class="navbar-brand" href="/">{{ site.name }}</a>
     </div>
     <ul class="nav navbar-nav">
-        {% if user.can.create_post %}
+        {% if user.can.create_posts %}
         <li><a href="/post/create">create</a></li>
         {% endif %}
     </ul>
