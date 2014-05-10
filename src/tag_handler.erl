@@ -2,14 +2,14 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    {ok, Req, Opts}.
 
 handle(Req, State) ->
+    Site = proplists:get_value(site, State),
+
     {Tag, Req2} = cowboy_req:binding(tag, Req),
     Title = "Posts tagged '" ++ binary_to_list(Tag) ++ "'",
-    {ok, Rev} = application:get_key(blerg, vsn),
-    Site = [{name, "Roger's Blog"}, {rev, Rev}],
     Headers = [{<<"content-type">>, <<"text/html">>}],
     Posts = [transform:post(P) || P <- posts:tagged(Tag)],
     {ok, Body} = case Posts of
@@ -21,4 +21,3 @@ handle(Req, State) ->
 
 terminate(_Reason, _Req, _State) ->
     ok.
-

@@ -2,12 +2,12 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    State = Opts,
+    {ok, Req, State}.
 
 handle(Req, State) ->
-    Site = [{name, "Roger's Blog"}],
-
+    Site = proplists:get_value(site, State),
     Title = "Create Post",
     Post = [{title, ""}, {body, <<"Editor goes here.">>}],
 

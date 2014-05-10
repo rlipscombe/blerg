@@ -10,20 +10,24 @@ stop(_State) ->
     ok.
 
 start_cowboy() ->
+    {ok, Rev} = application:get_key(blerg, vsn),
+    Site = [{name, "Roger's Blog"}, {rev, Rev}],
+
+    Opts = [{site, Site}],
     Routes = [
-            {"/", index_handler, []},
+            {"/", index_handler, Opts},
 
             % posts
-            {"/post/create", create_post_handler, []},
-            {"/post/save", save_post_handler, []},
-            {"/post/:id/edit", edit_post_handler, []},
-            {"/post/:id", post_handler, []},
+            {"/post/create", create_post_handler, Opts},
+            {"/post/save", save_post_handler, Opts},
+            {"/post/:id/edit", edit_post_handler, Opts},
+            {"/post/:id", post_handler, Opts},
 
             % tags
-            {"/tag/:tag", tag_handler, []},
+            {"/tag/:tag", tag_handler, Opts},
 
             % Syndication
-            {"/feed", feed_handler, []},
+            {"/feed", feed_handler, Opts},
 
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},

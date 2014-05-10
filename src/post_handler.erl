@@ -2,12 +2,12 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    {ok, Req, Opts}.
 
 handle(Req, State) ->
-    {ok, Rev} = application:get_key(blerg, vsn),
-    Site = [{name, "Roger's Blog"}, {rev, Rev}],
+    Site = proplists:get_value(site, State),
+
     {Id, Req2} = cowboy_req:binding(id, Req),
     reply(posts:by_id(Id), Site, Req2, State).
 
@@ -27,4 +27,3 @@ reply({error, not_found}, Site, Req, State) ->
 
 terminate(_Reason, _Req, _State) ->
     ok.
-

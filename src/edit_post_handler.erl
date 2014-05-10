@@ -2,11 +2,11 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    {ok, Req, Opts}.
 
 handle(Req, State) ->
-    Site = [{name, "Roger's Blog"}],
+    Site = proplists:get_value(site, State),
 
     % @todo This is fairly similar to create_post_handler; consider merging the two.
 
