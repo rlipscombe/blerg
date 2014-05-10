@@ -6,7 +6,7 @@
     #tab-edit, #tab-preview { display: block; margin-left: 0 }
     #editor { position: relative; border: 1px solid #008cba; }
     @media (min-width: 1200px) {
-        #editor { width: 1170px; height: 600px; margin-left: 0; margin-bottom: 0.8em; }
+        #editor { width: 1170px; height: 460px; margin-left: 0; margin-bottom: 0.8em; }
     }
     @media (min-width: 979px) and (max-width: 1200px) {
         #editor { width: 960px; height: 500px; margin-bottom: 0.8em; }
@@ -37,18 +37,20 @@
         <form role="form" class="form-horizontal" method="post">
             <div class="form-group">
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" id="title" name="title" placeholder="Title"/>
+                    <input class="form-control" type="text" id="title" name="title" placeholder="Title" value="{{ post.title }}"/>
                 </div>
             </div>
-            <div id="editor">Editor goes here.</div>
-
-            <input type="hidden" name="markdown"/>
+            <div id="editor">{{ post.body }}</div>
 
             <div class="form-group">
                 <div class="col-sm-7">
-                    <button type="submit" id="save" class="btn btn-primary">Save</button>
+                    <button type="submit" id="do-save" class="btn btn-primary">Save</button>
                 </div>
             </div>
+        
+            <input type="input" id="id" name="id" value="{{ post.id }}" />
+            <!-- TODO: Do we still need the hidden markdown field? -->
+            <input type="hidden" id="markdown" name="markdown"/>
         </form>
     </div>
 

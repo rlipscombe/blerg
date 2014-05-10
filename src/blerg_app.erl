@@ -10,18 +10,28 @@ stop(_State) ->
     ok.
 
 start_cowboy() ->
+    {ok, Rev} = application:get_key(blerg, vsn),
+    Site = [{name, "Roger's Blog"}, {rev, Rev}],
+
+    Opts = [{site, Site}],
     Routes = [
-            {"/", index_handler, []},
+            {"/", index_handler, Opts},
 
             % posts
-            {"/post/create", create_post_handler, []},
-            {"/post/:id", post_handler, []},
+            {"/post/create", create_post_handler, Opts},
+            {"/post/save", save_post_handler, Opts},
+            {"/post/:id/edit", edit_post_handler, Opts},
+            {"/post/:id", post_handler, Opts},
 
             % tags
-            {"/tag/:tag", tag_handler, []},
+            {"/tag/:tag", tag_handler, Opts},
 
             % Syndication
-            {"/feed", feed_handler, []},
+            {"/feed", feed_handler, Opts},
+
+            % Accounts
+            {"/account/login", login_handler, Opts},
+            {"/account/logout", logout_handler, Opts},
 
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
@@ -34,50 +44,13 @@ start_cowboy() ->
             ],
     Host = {'_', Routes},
     Dispatch = cowboy_router:compile([Host]),
+
+    OnResponse = fun(Code, Headers, Body, Req) ->
+            error_hook:onresponse(Code, Headers, Body, Req, Opts)
+    end,
     {ok, _} = cowboy:start_http(http, 100,
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
-                                 {onresponse, fun error_hook/4}]),
+                                 {onrequest, fun session_hook:onrequest/1},
+                                 {onresponse, OnResponse}]),
     ok.
-
-error_hook(404, _Headers, <<>>, Req) ->
-    {Path, _} = cowboy_req:path(Req),
-    case aliases:search(Path) of
-        {ok, Url} -> redirect(Path, Url, Req);
-        _ -> not_found(Path, Req)
-    end;
-error_hook(Code, _Headers, <<>>, Req)
-        when is_integer(Code), Code >= 400 ->
-
-    % Note that I'm ignoring the fact that this returns Req2.
-    {Path, _} = cowboy_req:path(Req),
-    {Method, _} = cowboy_req:method(Req),
-    {Headers, _} = cowboy_req:headers(Req),
-    lager:warning("HTTP Error ~p when ~p ~p ~p", [Code, Method, Path, Headers]),
-
-    Body = ["HTTP Error ", integer_to_list(Code), $\n],
-    Headers2 = lists:keyreplace(<<"content-length">>, 1, Headers,
-                                {<<"content-length">>, integer_to_list(iolist_size(Body))}),
-    {ok, Req2} = cowboy_req:reply(Code, Headers2, Body, Req),
-    Req2;
-error_hook(Code, _Headers, _Body, Req) ->
-    {Path, _} = cowboy_req:path(Req),
-    lager:info("~p when ~p", [Code, Path]),
-    Req.
-
-redirect(Path, Url, Req) when is_list(Url) ->
-    redirect(Path, list_to_binary(Url), Req);
-redirect(Path, Url, Req) when is_binary(Url) ->
-    lager:info("Redirecting ~p to ~p", [Path, Url]),
-    Headers = [{<<"location">>, Url}],
-    {ok, Req2} = cowboy_req:reply(302, Headers, <<>>, Req),
-    Req2.
-
-not_found(Path, Req) ->
-    lager:warning("Not found: ~p", [Path]),
-    Site = [{name, "Roger's Blog"}],
-    Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = not_found_dtl:render([{site, Site}, {path, Path}]),
-    {ok, Req2} = cowboy_req:reply(404, Headers, Body, Req),
-    Req2.
-

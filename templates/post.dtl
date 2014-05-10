@@ -5,6 +5,9 @@
 <h1>{{ post.title }}</h1>
 <div class="details">
     <span class="created_at" title="{{ post.created_at_iso|safe }}">{{ post.created_at_ago|safe }}</span>
+    {% if user.can.edit_posts %}
+    <a href="{{ post.id }}/edit">edit</a>
+    {% endif %}
 </div>
 <p>{{ post.body|safe }}</p>
 <div class="tags">
@@ -29,4 +32,3 @@
         });
 </script>
 {% endblock %}
-
