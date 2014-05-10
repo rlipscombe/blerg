@@ -48,7 +48,7 @@
                 </div>
             </div>
         
-            <input type="input" id="id" name="id" />
+            <input type="input" id="id" name="id" value="{{ post.id }}" />
             <!-- TODO: Do we still need the hidden markdown field? -->
             <input type="hidden" id="markdown" name="markdown"/>
         </form>
