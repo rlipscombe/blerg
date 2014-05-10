@@ -3,5 +3,9 @@
 
 onrequest(Req) ->
     {Cookie, Req2} = cowboy_req:cookie(<<"session_id">>, Req),
-    Session = session:get_session(Cookie),
-    cowboy_req:set_meta(session_id, Session, Req2).
+    lager:debug("Cookie: ~p", [Cookie]),
+
+    %Req3 = cowboy_req:set_meta(session_id, Session, Req2),
+    %cowboy_req:set_meta(user, User, Req3),
+
+    Req2.
