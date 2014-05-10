@@ -31,6 +31,7 @@ start_cowboy() ->
 
             % Accounts
             {"/account/login", login_handler, Opts},
+            {"/account/logout", logout_handler, Opts},
 
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
