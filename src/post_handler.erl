@@ -2,29 +2,30 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
-init(_Type, Req, _Opts) ->
-    {ok, Req, undefined}.
+init(_Type, Req, Opts) ->
+    {ok, Req, Opts}.
 
 handle(Req, State) ->
-    {ok, Rev} = application:get_key(blerg, vsn),
-    Site = [{name, "Roger's Blog"}, {rev, Rev}],
-    {Id, Req2} = cowboy_req:binding(id, Req),
-    reply(posts:by_id(Id), Site, Req2, State).
+    Site = proplists:get_value(site, State),
 
-reply({ok, P}, Site, Req, State) ->
+    {User, Req2} = cowboy_req:meta(user, Req),
+    {Id, Req3} = cowboy_req:binding(id, Req2),
+    reply(posts:by_id(Id), Site, User, Req3, State).
+
+reply({ok, P}, Site, User, Req, State) ->
     Post = transform:post(P),
     Title = proplists:get_value(title, Post),
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = post_dtl:render([{title, Title}, {site, Site}, {post, Post}]),
+    {ok, Body} = post_dtl:render([{title, Title}, {site, Site}, {user, User}, {post, Post}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State};
-reply({error, not_found}, Site, Req, State) ->
+reply({error, not_found}, Site, User, Req, State) ->
     {Path, _} = cowboy_req:path(Req),
+    lager:warning("Not found: ~p", [Path]),
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    {ok, Body} = not_found_dtl:render([{site, Site}, {path, Path}]),
+    {ok, Body} = not_found_dtl:render([{site, Site}, {user, User}, {path, Path}]),
     {ok, Req2} = cowboy_req:reply(200, Headers, Body, Req),
     {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.
-

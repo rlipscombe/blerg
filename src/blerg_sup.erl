@@ -11,5 +11,6 @@ start_link() ->
 
 init([]) ->
     Children = [
-            ?CHILD(blerg_db_sup, supervisor)],
+            ?CHILD(blerg_db_sup, supervisor),
+            ?CHILD(session_store, worker)],
     {ok, { {one_for_one, 5, 10}, Children }}.

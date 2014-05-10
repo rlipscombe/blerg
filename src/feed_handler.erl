@@ -2,19 +2,22 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 
--record(state, {base_url, this_url}).
+-record(state, {opts, base_url, this_url}).
 
-init(_Type, Req, _Opts) ->
+init(_Type, Req, Opts) ->
     Scheme = "http",
     {Host, Req2} = cowboy_req:host(Req),
     {Port, Req3} = cowboy_req:port(Req2),
     {Path, Req4} = cowboy_req:path(Req3),
     State = #state{base_url = create_base_url(Scheme, Host, Port),
-                   this_url = create_this_url(Scheme, Host, Port, Path)},
+                   this_url = create_this_url(Scheme, Host, Port, Path),
+                  opts = Opts},
     {ok, Req4, State}.
 
-handle(Req, #state{this_url = ThisUrl, base_url = BaseUrl} = State) ->
-    Title = "Roger's Blog",
+handle(Req, #state{this_url = ThisUrl, base_url = BaseUrl, opts = Opts} = State) ->
+    Site = proplists:get_value(site, Opts),
+    Title = proplists:get_value(name, Site),
+
     Headers = [{<<"content-type">>, <<"application/atom+xml">>}],
     Items = posts:feed(),
     Body = feed(Title, ThisUrl, BaseUrl, Items),
@@ -70,5 +73,3 @@ transform_item(BaseUrl, I) ->
                 {id, [], [Link]},
                 {content, [{type, "html"}], [Content]}
                ]}.
-%    Teaser = proplists:get_value(body, I),
-

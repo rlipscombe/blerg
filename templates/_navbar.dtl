@@ -4,7 +4,17 @@
       <a class="navbar-brand" href="/">{{ site.name }}</a>
     </div>
     <ul class="nav navbar-nav">
-      <li><a href="/post/create">create</a></li>
+        {% if user.can.create_posts %}
+        <li><a href="/post/create">create</a></li>
+        {% endif %}
+    </ul>
+    <ul class="nav navbar-nav pull-right">
+        {% if user.name %}
+        <li><a href="/account/me">{{ user.name }}</a></li>
+        <li><a href="/account/logout">logout</a></li>
+        {% else %}
+        <li><a href="/account/login">login</a></li>
+        {% endif %}
     </ul>
   </div>
 </div>
