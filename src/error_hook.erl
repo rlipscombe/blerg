@@ -4,8 +4,11 @@
 onresponse(404, _Headers, <<>>, Req) ->
     {Path, _} = cowboy_req:path(Req),
     case aliases:search(Path) of
-        {ok, Url} -> redirect(Path, Url, Req);
-        _ -> not_found(Path, Req)
+        {ok, Url} ->
+            lager:info("Redirecting ~p to ~p", [Path, Url]),
+            redirect:to(Url, Req);
+        _ ->
+            not_found(Path, Req)
     end;
 onresponse(Code, _Headers, <<>>, Req)
         when is_integer(Code), Code >= 400 ->
@@ -28,14 +31,6 @@ onresponse(Code, _Headers, _Body, Req)
     Req;
 onresponse(_Code, _Headers, _Body, Req) ->
     Req.
-
-redirect(Path, Url, Req) when is_list(Url) ->
-    redirect(Path, list_to_binary(Url), Req);
-redirect(Path, Url, Req) when is_binary(Url) ->
-    lager:info("Redirecting ~p to ~p", [Path, Url]),
-    Headers = [{<<"location">>, Url}],
-    {ok, Req2} = cowboy_req:reply(302, Headers, <<>>, Req),
-    Req2.
 
 not_found(Path, Req) ->
     lager:warning("Not found: ~p", [Path]),

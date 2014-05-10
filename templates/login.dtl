@@ -1,0 +1,24 @@
+{% extends "_master.dtl" %}
+
+{% block content %}
+<div class="col-md-4 col-md-offset-4">
+    <form class="form" role="form" method="post">
+        {% if alert %}
+        <div class="alert alert-danger">
+            {{ alert }}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="username" class="control-label">User name</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="User name">
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default">Sign In</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

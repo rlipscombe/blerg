@@ -6,6 +6,7 @@
         {applications, [
                 kernel, stdlib,
                 lager,
+                bcrypt,
                 cowboy
                 ]},
         {mod, { blerg_app, []}},

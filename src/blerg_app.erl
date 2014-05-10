@@ -29,6 +29,9 @@ start_cowboy() ->
             % Syndication
             {"/feed", feed_handler, Opts},
 
+            % Accounts
+            {"/account/login", login_handler, Opts},
+
             % static files
             {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
             {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
