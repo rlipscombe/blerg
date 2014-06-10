@@ -56,7 +56,7 @@ feed() ->
 tagged(Tag) ->
     % @todo This returns an empty set for unknown tags; we might prefer an error.
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, p.created_at, p.body"
             " FROM posts p"
             " INNER JOIN post_tags pt ON pt.post_id = p.id"
             " INNER JOIN tags t ON t.id = pt.tag_id"
