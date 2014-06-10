@@ -46,7 +46,7 @@ tags_for_post_id(Id) ->
 
 feed() ->
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, p.created_at, p.body"
             " FROM posts p"
             " WHERE p.created_at > CURRENT_DATE - INTERVAL '6 months'"
             " ORDER BY p.created_at DESC"
