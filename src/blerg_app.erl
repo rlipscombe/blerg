@@ -22,6 +22,7 @@ start_cowboy() ->
             {"/post/save", save_post_handler, Opts},
             {"/post/:id/edit", [{id, int}], edit_post_handler, Opts},
             {"/post/:id", [{id, int}], post_handler, Opts},
+            {"/post/:id/:slug", [{id, int}], post_handler, Opts},
 
             % tags
             {"/tag/:tag", tag_handler, Opts},

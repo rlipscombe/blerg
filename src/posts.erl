@@ -25,7 +25,7 @@ by_id(Id) ->
 
 post_by_id(Id) ->
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, u.name AS author, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, u.name AS author, p.created_at, p.body"
             " FROM posts p"
             " JOIN users u ON p.author_id = u.id"
             " WHERE p.id = $1", [Id]),
