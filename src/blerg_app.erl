@@ -20,8 +20,9 @@ start_cowboy() ->
             % posts
             {"/post/create", create_post_handler, Opts},
             {"/post/save", save_post_handler, Opts},
-            {"/post/:id/edit", edit_post_handler, Opts},
-            {"/post/:id", post_handler, Opts},
+            {"/post/:id/edit", [{id, int}], edit_post_handler, Opts},
+            {"/post/:id", [{id, int}], post_handler, Opts},
+            {"/post/:id/:slug", [{id, int}], post_handler, Opts},
 
             % tags
             {"/tag/:tag", tag_handler, Opts},

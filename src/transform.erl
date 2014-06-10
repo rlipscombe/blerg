@@ -36,10 +36,12 @@ convert_body(Body) ->
 datetime_to_iso({{Ye,Mo,Da},{Ho,Mi,_Se}}) ->
     io_lib:format("~4..0B-~2..0B-~2..0B ~2..0B:~2..0B", [Ye, Mo, Da, Ho, Mi]).
 
+%% @doc We can transform a single item into multiple items. The 'acc' function
+%% allows accumulating these into a single list. Essentially, it flattens as it
+%% goes.
 acc([], Acc) ->
     Acc;
 acc([H|T], Acc) ->
     acc(T, [H|Acc]);
 acc(V, Acc) ->
     [V|Acc].
-

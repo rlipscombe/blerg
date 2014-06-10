@@ -6,11 +6,11 @@ onresponse(404, _Headers, <<>>, Req, Opts) ->
     case aliases:search(Path) of
         {ok, Url} ->
             lager:info("Redirecting ~p to ~p", [Path, Url]),
-            redirect:to(Url, Req);
+            redirect:permanent(Url, Req);
         _ ->
             not_found(Path, Req, Opts)
     end;
-onresponse(Code, _Headers, _Body, Req, Opts)
+onresponse(Code, _Headers, _Body, Req, _Opts)
         when is_integer(Code), Code =:= 401 ->
     % @todo This ought to be middleware.
     lager:warning("Unauthorized"),

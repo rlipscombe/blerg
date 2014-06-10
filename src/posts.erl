@@ -4,7 +4,7 @@
 
 index() -> 
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, u.name AS author, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, u.name AS author, p.created_at, p.body"
             " FROM posts p"
             " JOIN users u ON p.author_id = u.id"
             " ORDER BY p.created_at DESC"),
@@ -25,7 +25,7 @@ by_id(Id) ->
 
 post_by_id(Id) ->
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, u.name AS author, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, u.name AS author, p.created_at, p.body"
             " FROM posts p"
             " JOIN users u ON p.author_id = u.id"
             " WHERE p.id = $1", [Id]),
@@ -46,7 +46,7 @@ tags_for_post_id(Id) ->
 
 feed() ->
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, p.created_at, p.body"
             " FROM posts p"
             " WHERE p.created_at > CURRENT_DATE - INTERVAL '6 months'"
             " ORDER BY p.created_at DESC"
@@ -56,7 +56,7 @@ feed() ->
 tagged(Tag) ->
     % @todo This returns an empty set for unknown tags; we might prefer an error.
     {ok, Cols, Rows} = blerg_db:equery(
-            "SELECT p.id, p.title, p.created_at, p.body"
+            "SELECT p.id, p.title, p.slug, p.created_at, p.body"
             " FROM posts p"
             " INNER JOIN post_tags pt ON pt.post_id = p.id"
             " INNER JOIN tags t ON t.id = pt.tag_id"

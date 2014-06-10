@@ -60,10 +60,11 @@ get_updated_at([H|_]) ->
 transform_item(BaseUrl, I) ->
     Id = proplists:get_value(id, I),
     Title = binary_to_list(proplists:get_value(title, I)),
+    Slug = binary_to_list(proplists:get_value(slug, I)),
     Body = proplists:get_value(body, I),
     CreatedAt = proplists:get_value(created_at, I),
     Updated = binary_to_list(iso8601:format(CreatedAt)),
-    Link = BaseUrl ++ "/post/" ++ integer_to_list(Id),
+    Link = [BaseUrl, "/post/", integer_to_list(Id), "/", Slug],
     Content = "<div>" ++ markdown:conv(binary_to_list(Body)) ++ "</div>",
     {entry, [], [
                 {title, [], [Title]},

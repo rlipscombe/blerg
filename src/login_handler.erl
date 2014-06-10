@@ -37,7 +37,7 @@ handle(<<"POST">>, Req, State) ->
                     Session = [{user, User}],
                     {ok, SessionId} = session_store:new_session(Session),
                     Req3 = cowboy_req:set_resp_cookie(<<"sessionid">>, SessionId, CookieOpts, Req2),
-                    Req4 = redirect:to("/", Req3),
+                    Req4 = redirect:temporary("/", Req3),
                     {ok, Req4, State};
                 _ ->
                     lager:warning("Invalid username or password (2)"),
