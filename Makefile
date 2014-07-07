@@ -1,7 +1,5 @@
 PROJECT = blerg
 BASE_DIR = $(shell pwd)
-#DEPS_DIR = $(BASE_DIR)/deps
-#export DEPS_DIR
 
 ERLC_OPTS ?= -Werror +warn_export_all +warn_export_vars +warn_shadow_vars +warn_obsolete_guard +'{parse_transform, lager_transform}'
 
@@ -15,6 +13,9 @@ dep_markdown = git://github.com/rlipscombe/erlmarkdown.git
 dep_bcrypt = https://github.com/opscode/erlang-bcrypt
 dep_erlware_commons = git://github.com/erlware/erlware_commons.git 4c97d4a
 dep_iso8601 = git://github.com/seansawyer/erlang_iso8601.git 1.1.1
+
+DEPS += ace
+dep_ace = https://github.com/ajaxorg/ace-builds/
 
 # Add '.' to the path, so that it can find rebar.
 export PATH:=$(BASE_DIR):$(PATH)
