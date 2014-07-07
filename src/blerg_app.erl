@@ -35,7 +35,8 @@ start_cowboy() ->
             {"/account/logout", logout_handler, Opts},
 
             % static files
-            {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt"}},
+            {"/robots.txt", cowboy_static, {priv_file, blerg, "robots.txt",
+                                            [{mimetypes, {<<"text">>, <<"plain">>, []}}]}},
             {"/favicon.ico", cowboy_static, {priv_file, blerg, "favicon.ico"}},
             {"/fonts/[...]", cowboy_static, {priv_dir, blerg, "fonts"}},
             {"/css/fonts/[...]", cowboy_static, {priv_dir, blerg, "fonts"}},

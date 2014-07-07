@@ -34,7 +34,7 @@ handle(Req, User, State) ->
             {body, Body}],
 
     {ok, NewId} = save(Id, Post),
-    
+
     {ok, Req3} = reply(NewId, Req2),
     {ok, Req3, State}.
 

@@ -17,22 +17,23 @@ handle(<<"POST">>, Req, State) ->
     UserName = proplists:get_value(<<"username">>, Form),
     Password = binary_to_list(proplists:get_value(<<"password">>, Form)),
 
-    case blerg_db:equery("SELECT password_hash FROM users WHERE name = $1", [UserName]) of
+    case blerg_db:equery("SELECT id, password_hash FROM users WHERE name = $1", [UserName]) of
         {ok, _Cols, []} ->
             % Mitigate timing attacks by running bcrypt anyway...
             FakeHash = "$2a$12$y9EdeWdcfUUC0za61U3SFeipoRnWhmXdE3Ha/nG4Msq2z5oEOXNaC",
             bcrypt:hashpw(Password, FakeHash),
             lager:warning("Invalid username or password (1)"),
             render([{alert, "Invalid username or password."}], Req2, State);
-        {ok, _Cols, [{<<"!">>}]} ->
+        {ok, _Cols, [{_, <<"!">>}]} ->
             % @todo This should be reported as "invalid username or password".
             lager:warning("Account ~p has no password set.", [UserName]),
             render([{alert, "Invalid username or password."}], Req2, State);
-        {ok, _Cols, [{Hash}]} ->
+        {ok, _Cols, [{UserId, Hash}]} ->
             Hash2 = binary_to_list(Hash),
             case bcrypt:hashpw(Password, Hash2) of
                 {ok, Hash2} ->
-                    User = [{name, UserName},
+                    User = [{id, UserId},
+                            {name, UserName},
                             {can, [{create_posts, true}, {edit_posts, true}]}],
                     Session = [{user, User}],
                     {ok, SessionId} = session_store:new_session(Session),

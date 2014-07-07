@@ -6,3 +6,6 @@ log/
 doc/
 *.pg_dump.bz2
 .rebar/
+.erlang.mk.packages.v1
+_rel/
+relx

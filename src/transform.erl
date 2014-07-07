@@ -39,6 +39,7 @@ datetime_to_iso({{Ye,Mo,Da},{Ho,Mi,_Se}}) ->
 %% @doc We can transform a single item into multiple items. The 'acc' function
 %% allows accumulating these into a single list. Essentially, it flattens as it
 %% goes.
+%% Note: lists:append won't work -- we have a mixture of lists and terms.
 acc([], Acc) ->
     Acc;
 acc([H|T], Acc) ->
