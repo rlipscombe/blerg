@@ -31,8 +31,12 @@ DATE=$(date -u +%Y%m%dT%H%M%S)
 # user@host
 WHO=${USERNAME}@${HOSTNAME}
 
-# e.g.
-# master-3916b84-v0.4-user@host-20140107T122358   (tagged)
-# master-1fb111e-user@host-20140201T123012        (untagged)
-# master-f27cc2c+-user@host-20140227T185525       (local modifications)
-echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-${WHO}-$DATE"
+if [ "$1" == "--short" ]; then
+    echo "${REV}${MODS}"
+else
+    # e.g.
+    # master-3916b84-v0.4-user@host-20140107T122358   (tagged)
+    # master-1fb111e-user@host-20140201T123012        (untagged)
+    # master-f27cc2c+-user@host-20140227T185525       (local modifications)
+    echo "$BRANCH-${REV}${MODS}${TAG:+-$TAG}-${WHO}-$DATE"
+fi

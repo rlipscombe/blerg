@@ -1,5 +1,6 @@
 PROJECT = blerg
 BASE_DIR = $(shell pwd)
+SHORT_VSN ?= $(shell ./git-vsn --short)
 
 ERLC_OPTS ?= -Werror +warn_export_all +warn_export_vars +warn_shadow_vars +warn_obsolete_guard +'{parse_transform, lager_transform}'
 
@@ -20,3 +21,6 @@ dep_ace = https://github.com/ajaxorg/ace-builds/
 # Add '.' to the path, so that it can find rebar.
 export PATH:=$(BASE_DIR):$(PATH)
 -include erlang.mk
+
+tarball: rel
+	tar -C _rel -cz -f blerg-$(SHORT_VSN).tar.gz blerg
