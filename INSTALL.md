@@ -50,6 +50,7 @@ On production:
     ssh prod
 
     # Pull the new code:
+    sudo bash
     cd /opt
     tar xfz path/to/blerg-whatever.tar.gz
     
