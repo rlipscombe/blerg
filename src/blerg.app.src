@@ -1,14 +1,17 @@
 {application, blerg,
     [
         {description, ""},
-        {vsn, {cmd, "./git-vsn"}},
+        {vsn, "1"},
         {registered, []},
         {applications, [
                 kernel, stdlib,
                 lager,
                 bcrypt,
-                cowboy
+                cowboy,
+                poolboy, epgsql,
+                markdown, erlydtl
                 ]},
+        {modules, []},
         {mod, { blerg_app, []}},
         {env, []}
         ]}.
