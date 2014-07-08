@@ -13,7 +13,7 @@ dep_epgsql = git://github.com/epgsql/epgsql.git 2.0.0
 dep_markdown = git://github.com/rlipscombe/erlmarkdown.git
 dep_bcrypt = https://github.com/opscode/erlang-bcrypt
 dep_erlware_commons = git://github.com/erlware/erlware_commons.git 4c97d4a
-dep_iso8601 = git://github.com/seansawyer/erlang_iso8601.git 1.1.1
+dep_iso8601 = git://github.com/rlipscombe/erlang_iso8601.git
 
 DEPS += ace
 dep_ace = https://github.com/ajaxorg/ace-builds/

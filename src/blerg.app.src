@@ -9,7 +9,8 @@
                 bcrypt,
                 cowboy,
                 poolboy, epgsql,
-                markdown, erlydtl
+                iso8601, markdown, erlydtl,
+                xmerl
                 ]},
         {modules, []},
         {mod, { blerg_app, []}},
