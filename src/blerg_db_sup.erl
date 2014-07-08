@@ -11,8 +11,8 @@ start_link() ->
 init([]) ->
     PoolArgs = [{name, {local, ?POOL_NAME}},
                 {worker_module, blerg_db_worker},
-                {size, 10},
-                {max_overflow, 10}],
+                {size, 50},
+                {max_overflow, 0}],
     WorkerArgs = [{hostname, "localhost"},
                   {database, "blerg"},
                   {username, "blerg"},
