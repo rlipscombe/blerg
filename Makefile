@@ -4,10 +4,13 @@ SHORT_VSN ?= $(shell ./git-vsn --short)
 REBAR ?= $(BASE_DIR)/rebar
 RELX ?= $(BASE_DIR)/relx
 
-top:
+all:
 	$(REBAR) get-deps
 	$(REBAR) compile
 	$(RELX)
 
-console: top
+console: all
 	_rel/blerg/bin/blerg console
+
+tarball: all
+	tar -C _rel -z -cf blerg-latest.tar.gz blerg
