@@ -3,6 +3,7 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    folsom_metrics:new_histogram({blerg, request_time}),
     ok = start_cowboy(),
     blerg_sup:start_link().
 

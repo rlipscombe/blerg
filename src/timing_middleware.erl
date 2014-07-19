@@ -11,6 +11,7 @@ execute(Req, Env) ->
                    ElapsedMicroSecs = timer:now_diff(os:timestamp(), RequestStart),
                    {URL, R2} = cowboy_req:url(R),
                    lager:info("Request to ~s took ~b us.", [URL, ElapsedMicroSecs]),
+                   folsom_metrics:notify({blerg, request_time}, ElapsedMicroSecs),
                    R2
            end,
     {ok, Req2, Env}.

@@ -11,7 +11,9 @@
                 poolboy, epgsql,
                 iso8601, markdown, erlydtl,
                 xmerl,
-                folsomite
+                folsomite,
+                % folsomite depends on these, but forgot to mention it.
+                protobuffs, bear
                 ]},
         {modules, []},
         {mod, { blerg_app, []}},
