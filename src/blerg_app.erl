@@ -53,6 +53,7 @@ start_cowboy() ->
     {ok, _} = cowboy:start_http(http, 100,
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
+                                 {middlewares, [timing_middleware, cowboy_router, cowboy_handler, timing_middleware]},
                                  {onrequest, fun session_hook:onrequest/1},
                                  {onresponse, OnResponse}]),
     ok.
