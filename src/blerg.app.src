@@ -10,7 +10,8 @@
                 cowboy,
                 poolboy, epgsql,
                 iso8601, markdown, erlydtl,
-                xmerl
+                xmerl,
+                folsomite
                 ]},
         {modules, []},
         {mod, { blerg_app, []}},
