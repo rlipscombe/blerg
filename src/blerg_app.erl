@@ -21,7 +21,7 @@ start_cowboy() ->
 
     Opts = [{site, Site}],
     Routes = [
-              {'_', cowboy_static, {priv_file, blerg, "maintenance.html"}},
+              %{'_', cowboy_static, {priv_file, blerg, "maintenance.html"}},
 
             {"/", index_handler, Opts},
 
