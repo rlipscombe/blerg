@@ -10,8 +10,7 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    PoolerSup = {pooler_sup, {pooler_sup, start_link, []},
-                permanent, infinity, supervisor, [pooler_sup]},
-    SessionSup = ?CHILD(session_store, worker),
-    Children = [PoolerSup, SessionSup],
+    Children = [
+            ?CHILD(blerg_db_sup, supervisor),
+            ?CHILD(session_store, worker)],
     {ok, { {one_for_one, 5, 10}, Children }}.

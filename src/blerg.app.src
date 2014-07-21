@@ -8,14 +8,13 @@
                 lager,
                 bcrypt,
                 cowboy,
-                epgsql,
+                poolboy, epgsql,
                 iso8601, markdown, erlydtl,
                 xmerl,
                 folsomite,
                 % folsomite depends on these, but forgot to mention it.
                 protobuffs, bear
                 ]},
-        {included_applications, [pooler]},
         {modules, []},
         {mod, { blerg_app, []}},
         {env, []}
