@@ -7,6 +7,8 @@ start(_StartType, _StartArgs) ->
     folsom_metrics:new_histogram({blerg, transform_post}),
     folsom_metrics:new_histogram({blerg, render, index_dtl}),
 
+    folsom_metrics:new_histogram({index_handler, posts, index}),
+    folsom_metrics:new_histogram({index_handler, posts, transform}),
     folsom_metrics:new_histogram({blerg_db, checkout}),
     folsom_metrics:new_histogram({blerg_db, transaction}),
     folsom_metrics:new_counter({blerg_db, active_workers}),
