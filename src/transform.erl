@@ -1,41 +1,47 @@
 -module(transform).
--export([post/1]).
+-export([post/2]).
 
 -define(TEASER_LENGTH, 360).
 
-post(P) ->
+post(P, Opts) ->
     folsom_metrics:histogram_timed_update(
       {blerg, transform_post},
       fun() ->
-              transform_post(P, [])
+              transform_post(P, Opts, [])
       end).
 
-transform_post([], Acc) ->
+transform_post([], _Opts, Acc) ->
     Acc;
-transform_post([H|T], Acc) ->
-    transform_post(T, acc(transform_prop(H), Acc)).
+transform_post([H|T], Opts, Acc0) ->
+    Acc1 = acc(transform_prop(H, Opts), Acc0),
+    transform_post(T, Opts, Acc1).
 
-transform_prop({created_at, Timestamp}) ->
+transform_prop({created_at, Timestamp}, _Opts) ->
     [{created_at, Timestamp},
      {created_at_iso, datetime_to_iso(Timestamp)},
      {created_at_ago, timeago:in_words(Timestamp)}];
-transform_prop({body, Body}) when is_binary(Body) ->
-    transform_prop({body, binary_to_list(Body)});
-transform_prop({body, Body}) ->
-    Teaser = create_teaser(Body),
-    [{body, convert_body(Body)}] ++ Teaser;
-transform_prop(X) ->
+transform_prop({body, Body}, Opts) when is_binary(Body) ->
+    transform_prop({body, binary_to_list(Body)}, Opts);
+transform_prop({body, Body}, Opts) ->
+    T = create_teaser(Body, proplists:get_value(teaser, Opts)),
+    B = convert_body(Body, proplists:get_value(body, Opts)),
+    T ++ B;
+transform_prop(X, _Opts) ->
     X.
 
-create_teaser(Body) when length(Body) > ?TEASER_LENGTH ->
+create_teaser(Body, true) when length(Body) > ?TEASER_LENGTH ->
     [{teaser, markdown:conv(string:substr(Body, 1, ?TEASER_LENGTH) ++ "...")},
      {read_more, true}];
-create_teaser(Body) ->
+create_teaser(Body, true) ->
     [{teaser, markdown:conv(Body)},
-     {read_more, false}].
+     {read_more, false}];
+create_teaser(_Body, _) ->
+    [].
 
-convert_body(Body) ->
-    markdown:conv(Body).
+convert_body(Body, true) ->
+    [{body, markdown:conv(Body)}];
+convert_body(_Body, _) ->
+    [].
 
 datetime_to_iso({{Ye,Mo,Da},{Ho,Mi,_Se}}) ->
     io_lib:format("~4..0B-~2..0B-~2..0B ~2..0B:~2..0B", [Ye, Mo, Da, Ho, Mi]).

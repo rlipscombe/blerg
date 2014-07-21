@@ -15,7 +15,7 @@ handle(Req, State) ->
     Ps = folsom_metrics:histogram_timed_update({index_handler, posts, index},
                                                fun() -> posts:index() end),
     Posts = folsom_metrics:histogram_timed_update({index_handler, posts, transform},
-                                                  fun() -> [transform:post(P) || P <- Ps] end),
+                                                  fun() -> [transform:post(P, [teaser]) || P <- Ps] end),
     {ok, Body} = render([{site, Site}, {title, Title}, {posts, Posts}, {user, User}]),
     {ok, Req3} = cowboy_req:reply(200, Headers, Body, Req2),
     {ok, Req3, State}.

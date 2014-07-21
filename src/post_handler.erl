@@ -32,7 +32,7 @@ reply({error, not_found}, _Slug, Site, User, Req, State) ->
     {ok, Req2, State}.
 
 render_post(P, Site, User, Req, State) ->
-    Post = transform:post(P),
+    Post = transform:post(P, [body]),
     Title = proplists:get_value(title, Post),
     Headers = [{<<"content-type">>, <<"text/html">>}],
     {ok, Body} = post_dtl:render([{title, Title}, {site, Site}, {user, User}, {post, Post}]),
