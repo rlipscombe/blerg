@@ -1,4 +1,5 @@
 -module(blerg_db_worker).
+-behaviour(poolboy_worker).
 -export([start_link/1]).
 
 -behaviour(gen_server).
@@ -12,7 +13,9 @@ init(Args) ->
     Username = proplists:get_value(username, Args),
     Password = proplists:get_value(password, Args),
     Database = proplists:get_value(database, Args),
+    lager:notice("Connecting to ~p database as ~p", [Database, Username]),
     {ok, Conn} = pgsql:connect(Hostname, Username, Password, [{database, Database}]),
+    process_flag(trap_exit, true),
     {ok, Conn}.
 
 handle_call({equery, Stmt, Params}, _From, Conn) ->
@@ -26,7 +29,8 @@ handle_cast(_Msg, State) ->
 handle_info(_Info, State) ->
     {noreply, State}.
 
-terminate(_Reason, Conn) ->
+terminate(Reason, Conn) ->
+    lager:notice("Closing DB connection ~p: ~p", [Conn, Reason]),
     pgsql:close(Conn).
 
 code_change(_OldVsn, State, _Extra) ->

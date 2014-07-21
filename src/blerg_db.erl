@@ -1,6 +1,8 @@
 -module(blerg_db).
 -export([equery/1, equery/2]).
 
+-define(POOL_NAME, blerg_db).
+
 equery(Stmt) ->
     equery(Stmt, []).
 
@@ -11,9 +13,8 @@ equery(Stmt, Params) ->
 
 transaction(Fun) ->
     folsom_metrics:notify({blerg_db, processes_waiting}, {inc, 1}),
-    W = folsom_metrics:histogram_timed_update(
-          {blerg_db, checkout},
-          fun() -> pooler:take_member(db) end),
+    W = folsom_metrics:histogram_timed_update({blerg_db, checkout},
+                                             fun() -> poolboy:checkout(?POOL_NAME, true, infinity) end),
     folsom_metrics:notify({blerg_db, processes_waiting}, {dec, 1}),
     log_result(transaction(W, Fun)).
 
@@ -23,7 +24,7 @@ transaction(W, Fun) ->
         folsom_metrics:histogram_timed_update({blerg_db, transaction},
                                               fun() -> Fun(W) end)
     after
-        ok = pooler:return_member(db, W),
+        ok = poolboy:checkin(?POOL_NAME, W),
         folsom_metrics:notify({blerg_db, active_workers}, {dec, 1})
     end.
 

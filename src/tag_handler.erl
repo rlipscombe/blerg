@@ -12,7 +12,7 @@ handle(Req, State) ->
     {Tag, Req3} = cowboy_req:binding(tag, Req2),
     Title = "Posts tagged '" ++ binary_to_list(Tag) ++ "'",
     Headers = [{<<"content-type">>, <<"text/html">>}],
-    Posts = [transform:post(P) || P <- posts:tagged(Tag)],
+    Posts = [transform:post(P, [teaser]) || P <- posts:tagged(Tag)],
     {ok, Body} = case Posts of
         [] -> tag_unknown_dtl:render([{title, Title}, {site, Site}, {tag, Tag}, {user, User}]);
         _ -> tag_dtl:render([{title, Title}, {site, Site}, {posts, Posts}, {user, User}])
