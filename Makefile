@@ -9,6 +9,13 @@ all:
 	$(REBAR) compile
 	$(RELX)
 
+clean:
+	$(REBAR) clean
+	-rm -rf deps/
+	-rm -rf doc/
+	-rm -rf log/
+	-rm -rf _rel/
+
 console: all
 	_rel/blerg/bin/blerg console
 
