@@ -1,5 +1,4 @@
 -module(blerg_db_worker).
--behaviour(poolboy_worker).
 -export([start_link/1]).
 
 -behaviour(gen_server).
