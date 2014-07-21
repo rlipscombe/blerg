@@ -4,6 +4,8 @@
 
 start(_StartType, _StartArgs) ->
     folsom_metrics:new_histogram({blerg, request_time}),
+    folsom_metrics:new_histogram({blerg, transform_post}),
+    folsom_metrics:new_histogram({blerg, render, index_dtl}),
 
     folsom_metrics:new_histogram({blerg_db, checkout}),
     folsom_metrics:new_histogram({blerg_db, transaction}),
