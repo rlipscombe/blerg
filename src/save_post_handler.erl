@@ -22,6 +22,8 @@ handle(Req, User, State) ->
     % Note: we don't simply use the incoming
     % proplist -- it's not trusted.
     Title = proplists:get_value(<<"title">>, Form),
+    Slug = create_slug(Title),
+
     % @todo Rename 'markdown' to 'body'?
     Body = proplists:get_value(<<"markdown">>, Form),
 
@@ -31,19 +33,23 @@ handle(Req, User, State) ->
     Post = [{title, Title},
             {author_id, AuthorId},
             {created_at, CreatedAt},
-            {body, Body}],
+            {body, Body},
+            {slug, Slug}],
 
     {ok, NewId} = save(Id, Post),
 
     {ok, Req3} = reply(NewId, Req2),
     {ok, Req3, State}.
 
+create_slug(Title) ->
+    list_to_binary(string:to_lower(re:replace(Title, "[^A-Za-z0-9]{1,}", "-", [global, {return, list}]))).
+
 save(<<>>, Post) ->
     % @todo Verify permissions to create a new post.
     posts:create(Post);
 save(Id, Post) ->
     Id2 = list_to_integer(binary_to_list(Id)),
-    % @todo Verify permissions to edit this post.
+    % @todo Verify permissions to edit *this* post.
     posts:update(Id2, Post).
 
 reply(Id, Req) ->

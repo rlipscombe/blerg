@@ -2,7 +2,7 @@
 -export([index/0, by_id/1, feed/0, tagged/1]).
 -export([create/1, update/2]).
 
-index() -> 
+index() ->
     {ok, Cols, Rows} = blerg_db:equery(
             "SELECT p.id, p.title, p.slug, u.name AS author, p.created_at, p.body"
             " FROM posts p"
@@ -69,11 +69,12 @@ create(Post) ->
     AuthorId = proplists:get_value(author_id, Post),
     CreatedAt = proplists:get_value(created_at, Post),
     Body = proplists:get_value(body, Post),
+    Slug = proplists:get_value(slug, Post),
 
     {ok, 1, _Cols, [{Id}]} = blerg_db:equery(
-            "INSERT INTO posts(title, author_id, created_at, body)"
-            " VALUES($1, $2, $3, $4) RETURNING id",
-            [Title, AuthorId, CreatedAt, Body]),
+            "INSERT INTO posts(title, author_id, created_at, body, slug)"
+            " VALUES($1, $2, $3, $4, $5) RETURNING id",
+            [Title, AuthorId, CreatedAt, Body, Slug]),
     {ok, Id}.
 
 update(Id, Post) ->

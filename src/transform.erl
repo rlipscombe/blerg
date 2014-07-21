@@ -4,7 +4,11 @@
 -define(TEASER_LENGTH, 360).
 
 post(P) ->
-    transform_post(P, []).
+    folsom_metrics:histogram_timed_update(
+      {blerg, transform_post},
+      fun() ->
+              transform_post(P, [])
+      end).
 
 transform_post([], Acc) ->
     Acc;

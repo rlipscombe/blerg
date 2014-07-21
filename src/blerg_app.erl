@@ -3,6 +3,14 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    folsom_metrics:new_histogram({blerg, request_time}),
+    folsom_metrics:new_histogram({blerg, transform_post}),
+    folsom_metrics:new_histogram({blerg, render, index_dtl}),
+
+    folsom_metrics:new_histogram({blerg_db, checkout}),
+    folsom_metrics:new_histogram({blerg_db, transaction}),
+    folsom_metrics:new_counter({blerg_db, active_workers}),
+    folsom_metrics:new_counter({blerg_db, processes_waiting}),
     ok = start_cowboy(),
     blerg_sup:start_link().
 
@@ -15,6 +23,8 @@ start_cowboy() ->
 
     Opts = [{site, Site}],
     Routes = [
+              %{'_', cowboy_static, {priv_file, blerg, "maintenance.html"}},
+
             {"/", index_handler, Opts},
 
             % posts
@@ -53,6 +63,7 @@ start_cowboy() ->
     {ok, _} = cowboy:start_http(http, 100,
                                 [{port, 4000}],
                                 [{env, [{dispatch, Dispatch}]},
+                                 {middlewares, [timing_middleware, cowboy_router, cowboy_handler, timing_middleware]},
                                  {onrequest, fun session_hook:onrequest/1},
                                  {onresponse, OnResponse}]),
     ok.

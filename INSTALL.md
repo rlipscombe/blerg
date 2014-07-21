@@ -14,7 +14,7 @@ sudo apt-get install postgresql
 
 ## Upstart script
 
-See `scripts/blerg.conf`
+See `init/blerg.conf`
 
 ## Install the DB
 
@@ -39,18 +39,23 @@ Note that this emits some warnings when transferring from Linux to OS X. Ignore 
 
 ## Upgrading
 
+On the dev box:
+
+    make tarball
+    scp blerg*.tar.gz prod:.
+
+On production:
+
     # Log into the production box:
     ssh prod
 
     # Pull the new code:
-    sudo -u blerg bash
-    cd /home/blerg/blerg
-    git pull
-    make
+    sudo bash
+    cd /opt
+    tar xfz path/to/blerg-whatever.tar.gz
     
     # Run migrations (not automatic at this point):
     psql -U blerg < migrations/whatever
     exit        # back to original user
 
     sudo restart blerg
-
