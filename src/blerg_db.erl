@@ -2,8 +2,6 @@
 -export([equery/1, equery/2]).
 
 -define(POOL_NAME, blerg_db).
--define(CHECKOUT_TIMEOUT_MS, 30000).
--define(CALL_TIMEOUT_MS, 30000).
 
 equery(Stmt) ->
     equery(Stmt, []).
